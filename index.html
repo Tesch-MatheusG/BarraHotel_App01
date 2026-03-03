@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Engenharia de Software</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #000000;
-            margin: 40px;
-        }
-        a {
-            color: #0000ee;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>BarraHotel App</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Engenharia de Software</h1>
+<div id="content">Carregando...</div>
 
-    <p>
-        Acesse o material da disciplina:
-        <a href="docs/"> Abrir pasta de materiais</a>
-    </p>
+<script>
+  fetch('README.md')
+    .then(response => response.text())
+    .then(text => {
+      document.getElementById('content').innerHTML = marked.parse(text);
+    });
+</script>
 
 </body>
 </html>
