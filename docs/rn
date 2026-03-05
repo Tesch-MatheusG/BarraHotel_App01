@@ -1,1 +1,5 @@
+Regras, leis, políticas e restrições que pertencem ao domínio e influenciam a lógica do sistema.
 
+RN01 — Bloqueio de login
+Após 5 tentativas inválidas, bloquear por 15 minutos.
+Uma RN deve ser determinística (verdadeira ou falsa).
