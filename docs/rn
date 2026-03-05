@@ -1,30 +1,22 @@
 # Regras de Negócio – Sistema de Hotel
-***
 
 ## RN01 — Bloqueio de Login
 Se um usuário realizar 5 tentativas consecutivas de login com senha inválida, o sistema deverá bloquear a conta por 15 minutos.
-***
 
 ## RN02 — Check-in permitido apenas com reserva ativa
 O sistema só permitirá realizar check-in se existir reserva ativa vinculada ao CPF do hóspede na data atual.
-***
 
 ## RN03 — Cancelamento gratuito
 O cancelamento da reserva será gratuito se realizado com antecedência mínima de 24 horas da data de check-in.
-***
 
 ## RN04 — Limite de ocupação do quarto
 O sistema não permitirá registrar número de hóspedes superior à capacidade máxima definida para o tipo de quarto.
-***
 
 ## RN05 — Pagamento obrigatório para confirmação
 Uma reserva só será considerada confirmada se houver registro de pagamento válido no sistema.
-***
 
 ## RN06 — Tarifa comissionada
 Se a reserva for realizada por agência parceira, o sistema deverá aplicar automaticamente a tarifa comissionada cadastrada para a agência.
-***
 
 ## RN07 — Check-out automático por inadimplência
 Se o pagamento não for identificado até o horário limite de check-out (12h), o sistema deverá sinalizar a reserva como pendente financeira.
-***
