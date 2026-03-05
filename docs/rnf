@@ -1,1 +1,5 @@
+Define como o sistema deve se comportar — desempenho, segurança, disponibilidade, qualidade.
 
+RNF01 — Performance de login
+O sistema deve responder à tentativa de login em até 2 segundos.
+Um RNF SEMPRE precisa de métrica.
