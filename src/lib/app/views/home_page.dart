@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'quartos_page.dart';
+import '../views/Quarto/quartos_page.dart';
 import '../viewmodels/quarto_viewmodel.dart';
 
 class HomePage extends StatelessWidget {

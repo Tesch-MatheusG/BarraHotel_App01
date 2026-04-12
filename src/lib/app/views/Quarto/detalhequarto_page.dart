@@ -1,6 +1,6 @@
 import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'reserva_page.dart';
+import '../reserva_page.dart';
 
 class DetalheQuartoPage extends StatefulWidget {
   final Quarto quarto;
