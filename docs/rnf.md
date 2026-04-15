@@ -1,22 +1,67 @@
-# Requisitos Não Funcionais – Sistema de Hotel
+# Requisitos Não Funcionais — Barra Hotel App
 
-## RNF01 — Performance de Login
-O sistema deve responder à tentativa de login em até 2 segundos, considerando 95% das requisições simultâneas de até 100 usuários.
+## 1. Desempenho
 
-## RNF02 — Disponibilidade do Sistema
-O sistema deve possuir disponibilidade mínima de 99% ao mês, excluindo manutenções programadas.
+RNF01 — O sistema deve responder à tentativa de login em até 3 segundos
+em condições normais de rede.
 
-## RNF03 — Tempo de Resposta na Reserva
-O sistema deve concluir o processo de criação de reserva em até 3 segundos, para até 50 acessos simultâneos.
+RNF02 — O sistema deve concluir o processo de criação de reserva
+em até 4 segundos em condições normais de rede.
 
-## RNF04 — Segurança de Senhas
-As senhas dos usuários devem ser armazenadas utilizando criptografia com hash seguro (ex: bcrypt) e nunca em texto puro.
+RNF03 — O chatbot deve retornar uma resposta em até 5 segundos
+após o envio da mensagem pelo usuário.
 
-## RNF05 — Backup de Dados
-O sistema deve realizar backup automático a cada 24 horas, com retenção mínima de 30 dias.
+## 2. Segurança
 
-## RNF06 — Tempo de Recuperação
-Em caso de falha crítica, o sistema deve ser restabelecido em até 4 horas.
+RNF04 — As senhas dos usuários devem ser gerenciadas pelo
+Firebase Authentication, garantindo armazenamento seguro
+sem exposição em texto puro.
 
-## RNF07 — Compatibilidade
-O sistema deve funcionar corretamente nas últimas 2 versões dos navegadores Chrome, Firefox e Edge.
+RNF05 — O sistema deve diferenciar as permissões de acesso
+entre perfil Cliente e perfil ADM.
+
+RNF06 — O sistema deve exigir verificação de identidade
+no primeiro acesso do cliente, validando rosto e documento
+via Google ML Kit.
+
+## 3. Disponibilidade e Confiabilidade
+
+RNF07 — O sistema deve utilizar o Firebase Firestore como
+banco de dados, garantindo sincronização em tempo real
+entre os dispositivos.
+
+RNF08 — O sistema deve realizar backup automático dos dados
+através do Firebase, com retenção gerenciada pela plataforma.
+
+RNF09 — O sistema deve informar ao usuário em caso de falha
+de conexão com a internet, impedindo ações que dependam de rede.
+
+## 4. Usabilidade
+
+RNF10 — O sistema deve ter interface intuitiva e responsiva,
+adaptada para dispositivos móveis Android.
+
+RNF11 — O sistema deve fornecer feedback visual ao usuário
+em todas as ações que envolvam carregamento ou processamento
+(ex: indicadores de loading).
+
+RNF12 — O sistema deve ser desenvolvido em português brasileiro.
+
+## 5. Compatibilidade
+
+RNF13 — RNF13 — O sistema deve ser compatível com dispositivos
+Android a partir da versão 8.0 (API 26) e iOS a partir
+da versão 14.0.
+
+RNF14 — O sistema deve ser desenvolvido em Flutter, garantindo
+base de código única para futuras expansões de plataforma.
+
+## 6. Manutenibilidade
+
+RNF15 — O código deve seguir a arquitetura MVVM adotada
+pelo projeto, separando responsabilidades entre Models,
+ViewModels e Views.
+
+RNF16 — O repositório deve seguir o fluxo de branches
+definido (feature → develop → main), com histórico de
+commits documentado.
