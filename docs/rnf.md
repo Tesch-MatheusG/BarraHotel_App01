@@ -49,7 +49,7 @@ RNF12 — O sistema deve ser desenvolvido em português brasileiro.
 
 ## 5. Compatibilidade
 
-RNF13 — RNF13 — O sistema deve ser compatível com dispositivos
+RNF13 — O sistema deve ser compatível com dispositivos
 Android a partir da versão 8.0 (API 26) e iOS a partir
 da versão 14.0.
 
