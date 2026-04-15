@@ -1,22 +1,58 @@
-# Regras de Negócio – Sistema de Hotel
+# Regras de Negócio — Barra Hotel App
 
-## RN01 — Bloqueio de Login
-Se um usuário realizar 5 tentativas consecutivas de login com senha inválida, o sistema deverá bloquear a conta por 15 minutos.
+## 1. Autenticação
 
-## RN02 — Check-in permitido apenas com reserva ativa
-O sistema só permitirá realizar check-in se existir reserva ativa vinculada ao CPF do hóspede na data atual.
+RN01 — O sistema deve bloquear a conta do usuário por 15 minutos
+após 5 tentativas consecutivas de login com senha inválida.
 
-## RN03 — Cancelamento gratuito
-O cancelamento da reserva será gratuito se realizado com antecedência mínima de 24 horas da data de check-in.
+## 2. Reservas
 
-## RN04 — Limite de ocupação do quarto
-O sistema não permitirá registrar número de hóspedes superior à capacidade máxima definida para o tipo de quarto.
+RN02 — O sistema não permitirá reservas em períodos já ocupados
+para o mesmo quarto.
 
-## RN05 — Pagamento obrigatório para confirmação
-Uma reserva só será considerada confirmada se houver registro de pagamento válido no sistema.
+RN03 — O sistema não permitirá registrar número de hóspedes
+superior à capacidade máxima do quarto selecionado.
 
-## RN06 — Tarifa comissionada
-Se a reserva for realizada por agência parceira, o sistema deverá aplicar automaticamente a tarifa comissionada cadastrada para a agência.
+RN04 — Uma reserva será considerada confirmada no momento
+em que o cliente a realizar pelo app, independente do pagamento,
+que será efetuado presencialmente no check-in ou check-out.
 
-## RN07 — Check-out automático por inadimplência
-Se o pagamento não for identificado até o horário limite de check-out (12h), o sistema deverá sinalizar a reserva como pendente financeira.
+RN05 — Se a reserva for realizada por agência parceira,
+o sistema deverá aplicar automaticamente a tarifa
+comissionada cadastrada para a agência.
+
+## 3. Cancelamento
+
+RN06 — O cancelamento da reserva será gratuito se realizado
+com antecedência mínima de 48 horas da data de check-in.
+
+RN07 — Cancelamentos realizados com menos de 48 horas de
+antecedência estarão sujeitos a uma tarifa de cancelamento
+definida pelo hotel.
+
+## 4. Check-in e Check-out
+
+RN08 — O check-in só será permitido se existir reserva ativa
+vinculada ao CPF do hóspede na data atual.
+
+RN09 — Se o pagamento presencial não for registrado pelo ADM
+até o horário limite de check-out (12h), o sistema deverá
+sinalizar a reserva como pendente financeira.
+
+## 5. Pagamento
+
+RN10 — O pagamento será realizado presencialmente no momento
+do check-in ou check-out.
+
+RN11 — O ADM deve registrar o pagamento no sistema,
+alterando o status da reserva para PAGO após a confirmação
+do pagamento presencial.
+
+## 6. Verificação de Identidade
+
+RN12 — A verificação de identidade será solicitada
+obrigatoriamente no primeiro cadastro do cliente.
+
+RN13 — A verificação será considerada válida somente se
+a imagem capturada contiver tanto o rosto do usuário
+quanto um documento de identificação.
