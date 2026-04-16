@@ -1,34 +1,55 @@
-## Backlog (Rascunho Inicial)
+# Backlog do Projeto — Barra Hotel App
 
-### Épico 1 – Cadastro de Hóspedes
-- Criar tela de cadastro
-- Armazenar dados do hóspede
-- Editar informações cadastradas
-- Excluir cadastro
+## Épico 1 – Autenticação e Perfis
 
-### Épico 2 – Gestão de Quartos
-- Listar quartos disponíveis
-- Registrar locação de quarto
-- Atualizar status do quarto (disponível/ocupado)
-- Encerrar locação
+* Tela de Splash
+* Tela de cadastro de usuário (cliente)
+* Tela de login
+* Diferenciação de perfil (ADM / Cliente) após login
+* Integração com Firebase Authentication
 
-### Épico 3 – Aplicativo Administrativo (ADM)
-- Login para funcionários
-- Visualização de todos os hóspedes cadastrados
-- Consulta de locações ativas
-- Controle geral de ocupação
+## Épico 2 – Gestão de Quartos
 
-### Épico 4 – Aplicativo Cliente
-- Cadastro simplificado
-- Visualização de reserva
-- Confirmação de locação
+* Mock de quartos com status (disponível/ocupado)
+* Listagem de quartos disponíveis
+* Visualização de detalhes do quarto
+* Atualização de status do quarto após reserva
+* Integração com Firebase Firestore
 
-### Épico 5 – Verificação de Identidade com IA (Planejamento)
-- Estudo de viabilidade técnica
-- Definição da abordagem de reconhecimento de imagem
-- Implementação de captura de imagem pelo aplicativo
-- Validação da presença de rosto e documento
-- Integração com fluxo de confirmação de check-in
+## Épico 3 – Reservas
 
----
+* Realizar reserva de quarto (Cliente)
+* Visualizar reserva ativa (Cliente)
+* Listar todas as reservas (ADM)
+* Encerrar locação (ADM)
+* Atualizar status do quarto ao encerrar locação
 
+## Épico 4 – Painel Administrativo
+
+* Visualização de todos os hóspedes cadastrados
+* Consulta de locações ativas
+* Controle geral de ocupação dos quartos
+* Editar informações de hóspedes
+* Excluir cadastro de hóspede
+
+## Épico 5 – Chatbot de Atendimento
+
+* Definição do escopo de respostas do chatbot
+* Integração com a API da Anthropic (Claude)
+* Tela de chat no app
+* Chatbot responde dúvidas sobre o hotel, quartos e reservas
+
+## Épico 6 – Verificação de Identidade com IA
+
+* Integração com Google ML Kit (Flutter)
+* Tela de captura de imagem pelo app
+* Validação de presença de rosto na imagem
+* Validação de presença de documento na imagem
+* Acionamento apenas no primeiro cadastro ou reserva
+
+## Épico 7 – Infraestrutura e Banco de Dados
+
+* Configuração do Firebase no projeto Flutter
+* Migração do mock de usuários para o Firestore
+* Migração do mock de quartos para o Firestore
+* Regras de segurança do Firebase
