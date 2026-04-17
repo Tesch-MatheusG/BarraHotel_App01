@@ -1,4 +1,4 @@
-import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
+import 'package:atividadep1/app/models/quarto_model.dart';
 import 'package:flutter/material.dart';
 import '../reserva_page.dart';
 
