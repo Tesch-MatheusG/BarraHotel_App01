@@ -1,5 +1,6 @@
 import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
+import '../data/sessao.dart';
 
 // PÁGINA DE RESERVA
 // Formulário de dados do hóspede + seleção de datas + resumo financeiro
@@ -13,10 +14,8 @@ class ReservaPage extends StatefulWidget {
 }
 
 class _ReservaPageState extends State<ReservaPage> {
-  // Controladores dos campos de texto
-  final _nomeController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _telefoneController = TextEditingController();
+
+  String get _nomeUsuario => Sessao.usuarioLogado?.nome ?? '';
 
   DateTime? _checkIn;
   DateTime? _checkOut;
@@ -73,10 +72,10 @@ class _ReservaPageState extends State<ReservaPage> {
 
   // Valida e confirma a reserva
   void _confirmar() {
-    if (_nomeController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty ||
-        _checkIn == null ||
-        _checkOut == null) {
+    if (
+      _checkIn == null ||
+      _checkOut == null
+    ) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Preencha todos os campos obrigatórios.'),
@@ -98,9 +97,6 @@ class _ReservaPageState extends State<ReservaPage> {
 
   @override
   void dispose() {
-    _nomeController.dispose();
-    _emailController.dispose();
-    _telefoneController.dispose();
     super.dispose();
   }
 
@@ -112,7 +108,7 @@ class _ReservaPageState extends State<ReservaPage> {
         quarto: widget.quarto,
         checkIn: _checkIn!,
         checkOut: _checkOut!,
-        nome: _nomeController.text.trim(),
+        nome: _nomeUsuario,
         total: _total,
         noites: _noites,
       );
@@ -213,27 +209,29 @@ class _ReservaPageState extends State<ReservaPage> {
 
                   const SizedBox(height: 20),
 
-                  _TituloSecao('Dados do Hóspede Principal'),
-                  _CampoTexto(
-                    controller: _nomeController,
-                    label: 'Nome completo *',
-                    icon: Icons.person_outline,
-                    tipo: TextInputType.name,
-                  ),
-                  const SizedBox(height: 12),
-                  _CampoTexto(
-                    controller: _emailController,
-                    label: 'E-mail *',
-                    icon: Icons.email_outlined,
-                    tipo: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 12),
-                  _CampoTexto(
-                    controller: _telefoneController,
-                    label: 'Telefone / WhatsApp',
-                    icon: Icons.phone_outlined,
-                    tipo: TextInputType.phone,
-                  ),
+                  _TituloSecao('Hóspede Principal'),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Color(0xFFDDDDDD)),
+                      ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person, color: Color(0xFF0D2A7A), size: 24),
+                        const SizedBox(width: 12,),
+                        Text(
+                          _nomeUsuario,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),  
+                    ),
+                  
 
                   const SizedBox(height: 24),
 
