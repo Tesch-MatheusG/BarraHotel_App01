@@ -89,6 +89,10 @@ class _SignupPageState extends State<SignupPage> {
                         nome.text,
                         email.text,
                         senha.text,
+                        cpf.text,
+                        telefone.text,
+                        cep.text,
+                        endereco.text,
                       );
 
                       Navigator.pop(context);

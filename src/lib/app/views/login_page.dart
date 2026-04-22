@@ -122,7 +122,24 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 10),
 
-                  Text('Esqueceu a senha?'),
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: implementar recuperação de senha via Firebase
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Em breve: recuperação de senha por e-mail.'),
+                          backgroundColor: Color(0xFF0D2A7A),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                     'Esqueceu a senha?',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Color(0xFF0D2A7A),
+                      ),
+                    ),
+                  ),
 
                   SizedBox(height: 5),
 
@@ -143,13 +160,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-
-      // BOTÃO SAIR
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.vermelho,
-        onPressed: () {},
-        child: Text('Sair'),
       ),
     );
   }
