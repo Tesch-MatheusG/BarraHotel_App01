@@ -1,3 +1,4 @@
+import 'package:atividadep1/app/data/sessao.dart';
 import 'package:flutter/material.dart';
 import '../views/cores.dart';
 import '../viewmodels/login_viewmodel.dart';
@@ -107,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         if (user != null) {
+                          Sessao.iniciar(user);
                           Navigator.pushReplacementNamed(context, '/home');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

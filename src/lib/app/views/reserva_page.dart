@@ -734,7 +734,7 @@ class _TelaSucesso extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Total pago',
+                          'Total (Pago no Check-in)',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
