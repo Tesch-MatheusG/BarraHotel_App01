@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../views/Quarto/quartos_page.dart';
+import 'quarto/quartos_page.dart';
 import '../viewmodels/quarto_viewmodel.dart';
+import '../views/bottom_nav.dart';
+import 'cores.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,8 +10,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      bottomNavigationBar: _BottomNav(currentIndex: 0),
+      backgroundColor: AppColors.fundoPagina,
+      bottomNavigationBar: BottomNav(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -51,7 +53,7 @@ class _SectionSobreHotel extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFDDDDDD)),
+            border: Border.all(color: AppColors.cinzaBorda),
           ),
           child: const Text(
             'O Barra Hotel oferece 12 tipos diferentes de acomodações, desde apartamentos simples, até executivos e master, atendendo hóspedes individuais, casais, grupos e famílias de até 4 pessoas.\n\n'
@@ -221,7 +223,7 @@ class _SectionDiferenciais extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2E5A),
+        color: AppColors.azulMedio,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -261,48 +263,6 @@ class _SectionDiferenciais extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _BottomNav extends StatelessWidget {
-  final int currentIndex;
-
-  const _BottomNav({required this.currentIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      selectedItemColor: const Color(0xFF1A2E5A),
-      unselectedItemColor: Colors.grey,
-      backgroundColor: Colors.white,
-      elevation: 8,
-      onTap: (index) {
-        if (index == 1) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const QuartosPage()),
-          );
-        }
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Início',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bed_outlined),
-          activeIcon: Icon(Icons.bed),
-          label: 'Quartos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.smart_toy_outlined),
-          activeIcon: Icon(Icons.smart_toy),
-          label: 'Assistente',
-        ),
-      ],
     );
   }
 }

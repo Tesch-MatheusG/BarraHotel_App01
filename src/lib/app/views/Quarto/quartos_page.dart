@@ -2,6 +2,8 @@ import 'package:atividadep1/app/models/quarto_model.dart';
 import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'lista_quartos_page.dart';
+import '../bottom_nav.dart';
+import '../../views/cores.dart';
 
 // PÁGINA PRINCIPAL DE QUARTOS
 // Exibe os benefícios inclusos e as abas de categoria (Single, Casal, Triplo, Quádruplo)
@@ -32,8 +34,8 @@ class _QuartosPageState extends State<QuartosPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      bottomNavigationBar: _BottomNav(currentIndex: 1),
+      backgroundColor: AppColors.fundoPagina,
+      bottomNavigationBar: BottomNav(currentIndex: 1),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +69,7 @@ class _Cabecalho extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFF0D2A7A),
+      color: AppColors.azulEscuro,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +106,7 @@ class _CardIncluido extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +160,7 @@ class _ItemIncluido extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: const Color(0xFF0D2A7A)),
+        Icon(icon, size: 20, color: AppColors.azulEscuro),
         const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +204,7 @@ class _TabsCategoria extends StatelessWidget {
         controller: tabController,
         // Indicador no estilo "pill" preenchendo toda a aba
         indicator: BoxDecoration(
-          color: const Color(0xFF0D2A7A),
+          color: AppColors.azulEscuro,
           borderRadius: BorderRadius.circular(30),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
@@ -215,45 +217,6 @@ class _TabsCategoria extends StatelessWidget {
         dividerColor: Colors.transparent,
         tabs: categorias.map((c) => Tab(text: c.label)).toList(),
       ),
-    );
-  }
-}
-
-
-class _BottomNav extends StatelessWidget {
-  final int currentIndex;
-
-  const _BottomNav({required this.currentIndex});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      selectedItemColor: const Color(0xFF1A2E5A),
-      unselectedItemColor: Colors.grey,
-      backgroundColor: Colors.white,
-      elevation: 8,
-      onTap: (index) {
-        // Navega apenas para o início (aba 0); quartos já está ativo
-        if (index == 0) Navigator.pushReplacementNamed(context, '/home');
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Início',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bed_outlined),
-          activeIcon: Icon(Icons.bed),
-          label: 'Quartos',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.smart_toy_outlined),
-          activeIcon: Icon(Icons.smart_toy),
-          label: 'Assistente',
-        ),
-      ],
     );
   }
 }

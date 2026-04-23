@@ -1,3 +1,4 @@
+import 'package:atividadep1/app/data/sessao.dart';
 import 'package:flutter/material.dart';
 import '../views/cores.dart';
 import '../viewmodels/login_viewmodel.dart';
@@ -71,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   // EMAIL
                   TextFormField(
                     controller: emailController,
-                    decoration: _inputDecoration('Email / CPF:'),
+                    decoration: _inputDecoration('Email:'),
                     validator: (value) =>
                         value!.isEmpty ? 'Informe o email' : null,
                   ),
@@ -107,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         if (user != null) {
+                          Sessao.iniciar(user);
                           Navigator.pushReplacementNamed(context, '/home');
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -120,7 +122,24 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 10),
 
-                  Text('Esqueceu a senha?'),
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: implementar recuperação de senha via Firebase
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Em breve: recuperação de senha por e-mail.'),
+                          backgroundColor: AppColors.azulEscuro,
+                        ),
+                      );
+                    },
+                    child: const Text(
+                     'Esqueceu a senha?',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: AppColors.azulEscuro,
+                      ),
+                    ),
+                  ),
 
                   SizedBox(height: 5),
 
@@ -141,13 +160,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-
-      // BOTÃO SAIR
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.vermelho,
-        onPressed: () {},
-        child: Text('Sair'),
       ),
     );
   }
