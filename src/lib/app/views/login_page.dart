@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   // EMAIL
                   TextFormField(
                     controller: emailController,
-                    decoration: _inputDecoration('Email / CPF:'),
+                    decoration: _inputDecoration('Email:'),
                     validator: (value) =>
                         value!.isEmpty ? 'Informe o email' : null,
                   ),
