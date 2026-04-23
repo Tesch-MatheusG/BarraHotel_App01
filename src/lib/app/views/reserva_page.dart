@@ -1,6 +1,7 @@
 import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
 import '../data/sessao.dart';
+import '../views/cores.dart';
 
 // PÁGINA DE RESERVA
 // Formulário de dados do hóspede + seleção de datas + resumo financeiro
@@ -47,7 +48,7 @@ class _ReservaPageState extends State<ReservaPage> {
         // Aplica a cor principal do projeto no calendário
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(
-            primary: Color(0xFF0D2A7A),
+            primary: AppColors.azulEscuro,
             onPrimary: Colors.white,
           ),
         ),
@@ -115,9 +116,9 @@ class _ReservaPageState extends State<ReservaPage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.fundoPagina,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D2A7A),
+        backgroundColor: AppColors.azulEscuro,
         foregroundColor: Colors.white,
         title: const Text(
           'Confirmar Reserva',
@@ -168,7 +169,7 @@ class _ReservaPageState extends State<ReservaPage> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEAF0FB),
+                        color: AppColors.azulClaro,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -177,14 +178,14 @@ class _ReservaPageState extends State<ReservaPage> {
                           const Icon(
                             Icons.nights_stay_outlined,
                             size: 16,
-                            color: Color(0xFF0D2A7A),
+                            color: AppColors.azulEscuro,
                           ),
                           const SizedBox(width: 6),
                           Text(
                             '$_noites noite${_noites > 1 ? 's' : ''} '
                             'selecionada${_noites > 1 ? 's' : ''}',
                             style: const TextStyle(
-                              color: Color(0xFF0D2A7A),
+                              color: AppColors.azulEscuro,
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                             ),
@@ -219,7 +220,7 @@ class _ReservaPageState extends State<ReservaPage> {
                       ),
                     child: Row(
                       children: [
-                        const Icon(Icons.person, color: Color(0xFF0D2A7A), size: 24),
+                        const Icon(Icons.person, color: AppColors.azulEscuro, size: 24),
                         const SizedBox(width: 12,),
                         Text(
                           _nomeUsuario,
@@ -249,7 +250,7 @@ class _ReservaPageState extends State<ReservaPage> {
                     child: ElevatedButton(
                       onPressed: _confirmar,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D2A7A),
+                        backgroundColor: AppColors.azulEscuro,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -302,7 +303,7 @@ class _BannerQuarto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFF0D2A7A),
+      color: AppColors.azulEscuro,
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -383,14 +384,14 @@ class _SeletorData extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFDDDDDD)),
+          border: Border.all(color: AppColors.cinzaBorda),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(icon, size: 13, color: const Color(0xFF0D2A7A)),
+                Icon(icon, size: 13, color:AppColors.azulEscuro),
                 const SizedBox(width: 4),
                 Text(
                   label,
@@ -439,7 +440,7 @@ class _ContadorHospedes extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -448,7 +449,7 @@ class _ContadorHospedes extends StatelessWidget {
             children: [
               const Icon(
                 Icons.person_outline,
-                color: Color(0xFF0D2A7A),
+                color: AppColors.azulEscuro,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -466,14 +467,14 @@ class _ContadorHospedes extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.remove_circle_outline),
                 color: onDecrementar != null
-                    ? const Color(0xFF0D2A7A)
+                    ? AppColors.azulEscuro
                     : Colors.grey,
                 onPressed: onDecrementar,
               ),
               IconButton(
                 icon: const Icon(Icons.add_circle_outline),
                 color: onIncrementar != null
-                    ? const Color(0xFF0D2A7A)
+                    ? AppColors.azulEscuro
                     : Colors.grey,
                 onPressed: onIncrementar,
               ),
@@ -505,7 +506,7 @@ class _CampoTexto extends StatelessWidget {
       keyboardType: tipo,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: const Color(0xFF0D2A7A), size: 20),
+        prefixIcon: Icon(icon, color: AppColors.azulEscuro, size: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
@@ -517,7 +518,7 @@ class _CampoTexto extends StatelessWidget {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(
-            color: Color(0xFF0D2A7A),
+            color: AppColors.azulEscuro,
             width: 1.5,
           ),
         ),
@@ -547,7 +548,7 @@ class _ResumoFinanceiro extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Column(
         children: [
@@ -587,7 +588,7 @@ class _LinhaResumo extends StatelessWidget {
             fontSize: negrito ? 15 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
             color:
-                negrito ? const Color(0xFF1A1A1A) : const Color(0xFF777777),
+                negrito ? const Color(0xFF1A1A1A) : AppColors.cinzaTexto,
           ),
         ),
         Text(
@@ -596,7 +597,7 @@ class _LinhaResumo extends StatelessWidget {
             fontSize: negrito ? 16 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
             color:
-                negrito ? const Color(0xFF0D2A7A) : const Color(0xFF777777),
+                negrito ? AppColors.azulEscuro : AppColors.cinzaTexto,
           ),
         ),
       ],
@@ -669,7 +670,7 @@ class _TelaSucesso extends StatelessWidget {
                 ),
                 child: const Icon(
                   Icons.check_circle_rounded,
-                  color: Color(0xFF0D2A7A),
+                  color: AppColors.azulEscuro,
                   size: 64,
                 ),
               ),
@@ -681,7 +682,7 @@ class _TelaSucesso extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D2A7A),
+                  color: AppColors.azulEscuro,
                 ),
               ),
 
@@ -703,9 +704,9 @@ class _TelaSucesso extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
+                  color: AppColors.fundoPagina,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFDDDDDD)),
+                  border: Border.all(color: AppColors.cinzaBorda),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -745,7 +746,7 @@ class _TelaSucesso extends StatelessWidget {
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Color(0xFF0D2A7A),
+                            color: AppColors.azulEscuro,
                           ),
                         ),
                       ],
@@ -791,7 +792,7 @@ class _TelaSucesso extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pushReplacementNamed(context, '/home'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D2A7A),
+                    backgroundColor: AppColors.azulEscuro,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -816,7 +817,7 @@ class _TelaSucesso extends StatelessWidget {
                     Navigator.popUntil(context, ModalRoute.withName('/home')),
                 child: const Text(
                   'Ver outros quartos',
-                  style: TextStyle(color: Color(0xFF0D2A7A)),
+                  style: TextStyle(color: AppColors.azulEscuro),
                 ),
               ),
             ],
@@ -839,7 +840,7 @@ class _DetalheItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 17, color: const Color(0xFF0D2A7A)),
+        Icon(icon, size: 17, color: AppColors.azulEscuro),
         const SizedBox(width: 10),
         Text(
           '$label: ',

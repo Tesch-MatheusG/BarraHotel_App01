@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../views/Quarto/quartos_page.dart';
+import 'quarto/quartos_page.dart';
 import '../viewmodels/quarto_viewmodel.dart';
 import '../views/bottom_nav.dart';
+import 'cores.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,7 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.fundoPagina,
       bottomNavigationBar: BottomNav(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -52,7 +53,7 @@ class _SectionSobreHotel extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFFDDDDDD)),
+            border: Border.all(color: AppColors.cinzaBorda),
           ),
           child: const Text(
             'O Barra Hotel oferece 12 tipos diferentes de acomodações, desde apartamentos simples, até executivos e master, atendendo hóspedes individuais, casais, grupos e famílias de até 4 pessoas.\n\n'
@@ -222,7 +223,7 @@ class _SectionDiferenciais extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2E5A),
+        color: AppColors.azulMedio,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

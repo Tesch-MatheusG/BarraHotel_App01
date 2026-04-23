@@ -1,7 +1,7 @@
 import 'package:atividadep1/app/models/quarto_model.dart';
 import 'package:flutter/material.dart';
 import 'detalhequarto_page.dart';
-
+import '../../views/cores.dart';
 
 class ListaQuartosPage extends StatelessWidget {
   final CategoriaQuarto categoria;
@@ -34,7 +34,7 @@ class _CardQuarto extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFDDDDDD)),
+          border: Border.all(color: AppColors.cinzaBorda),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.06),
@@ -128,7 +128,7 @@ class _CardQuarto extends StatelessWidget {
                               const Icon(
                                 Icons.check,
                                 size: 14,
-                                color: Color(0xFF0D2A7A),
+                                color: AppColors.azulEscuro,
                               ),
                               const SizedBox(width: 4),
                               Text(c, style: const TextStyle(fontSize: 12)),
@@ -145,7 +145,7 @@ class _CardQuarto extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => _abrirDetalhes(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D2A7A),
+                        backgroundColor: AppColors.azulEscuro,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         shape: RoundedRectangleBorder(

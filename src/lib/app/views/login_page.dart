@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Em breve: recuperação de senha por e-mail.'),
-                          backgroundColor: Color(0xFF0D2A7A),
+                          backgroundColor: AppColors.azulEscuro,
                         ),
                       );
                     },
@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                      'Esqueceu a senha?',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
-                        color: Color(0xFF0D2A7A),
+                        color: AppColors.azulEscuro,
                       ),
                     ),
                   ),

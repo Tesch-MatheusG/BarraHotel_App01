@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Quarto/quartos_page.dart';
+import 'quarto/quartos_page.dart';
+import 'cores.dart';
 
 class BottomNav extends StatelessWidget {
   final int currentIndex;
@@ -10,7 +11,7 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      selectedItemColor: const Color(0xFF1A2E5A),
+      selectedItemColor: AppColors.azulMedio,
       unselectedItemColor: Colors.grey,
       backgroundColor: Colors.white,
       elevation: 8,

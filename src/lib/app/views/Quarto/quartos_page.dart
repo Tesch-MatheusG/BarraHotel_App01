@@ -3,6 +3,7 @@ import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'lista_quartos_page.dart';
 import '../bottom_nav.dart';
+import '../../views/cores.dart';
 
 // PÁGINA PRINCIPAL DE QUARTOS
 // Exibe os benefícios inclusos e as abas de categoria (Single, Casal, Triplo, Quádruplo)
@@ -33,7 +34,7 @@ class _QuartosPageState extends State<QuartosPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.fundoPagina,
       bottomNavigationBar: BottomNav(currentIndex: 1),
       body: SafeArea(
         child: Column(
@@ -68,7 +69,7 @@ class _Cabecalho extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFF0D2A7A),
+      color: AppColors.azulEscuro,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +106,7 @@ class _CardIncluido extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,7 +160,7 @@ class _ItemIncluido extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: const Color(0xFF0D2A7A)),
+        Icon(icon, size: 20, color: AppColors.azulEscuro),
         const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +204,7 @@ class _TabsCategoria extends StatelessWidget {
         controller: tabController,
         // Indicador no estilo "pill" preenchendo toda a aba
         indicator: BoxDecoration(
-          color: const Color(0xFF0D2A7A),
+          color: AppColors.azulEscuro,
           borderRadius: BorderRadius.circular(30),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
