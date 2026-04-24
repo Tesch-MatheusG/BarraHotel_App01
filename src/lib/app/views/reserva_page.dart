@@ -2,6 +2,8 @@ import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
 import '../data/sessao.dart';
 import '../views/cores.dart';
+import '../data/reserva_mock_store.dart';
+import '../models/reserva_model.dart';
 
 // PÁGINA DE RESERVA
 // Formulário de dados do hóspede + seleção de datas + resumo financeiro
@@ -85,6 +87,18 @@ class _ReservaPageState extends State<ReservaPage> {
       );
       return;
     }
+    final reserva = ReservaModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      nomeQuarto: widget.quarto.nome,
+      tipoCama: widget.quarto.tipoCama,
+      precoPorNoite: widget.quarto.preco,
+      checkIn: _checkIn!,
+      checkOut: _checkOut!,
+      hospedes: _hospedes,
+      total: _total,
+    );
+
+    ReservaMockStore.adicionar(reserva);
     setState(() => _confirmado = true);
   }
 
