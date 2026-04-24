@@ -1,4 +1,4 @@
-import '../models/reserva_mordel.dart';
+import '../models/reserva_model.dart';
 
 class ReservaMockStore {
   static final List<ReservaModel> _reservas = [];
