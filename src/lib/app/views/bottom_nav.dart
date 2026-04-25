@@ -25,7 +25,15 @@ class BottomNav extends StatelessWidget {
             MaterialPageRoute(builder: (_) => const QuartosPage()),
           );
         }
-        // index == 2 será o chatbot, implementar futuramente
+        if (index == 2 && currentIndex != 2) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Chatbot em breve!'),
+              backgroundColor: AppColors.azulEscuro,
+            ),
+          );
+        }
+        
       },
       items: const [
         BottomNavigationBarItem(
