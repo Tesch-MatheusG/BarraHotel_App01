@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'lista_quartos_page.dart';
 import '../bottom_nav.dart';
 import '../../views/cores.dart';
+import '../drawer_menu.dart';
 
 // PÁGINA PRINCIPAL DE QUARTOS
 // Exibe os benefícios inclusos e as abas de categoria (Single, Casal, Triplo, Quádruplo)
@@ -35,62 +36,37 @@ class _QuartosPageState extends State<QuartosPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.fundoPagina,
+      drawer: const DrawerMenu(),
+      appBar: AppBar(
+        backgroundColor: AppColors.azulEscuro,
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Nossos Quartos',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        elevation: 0,
+      ),
       bottomNavigationBar: BottomNav(currentIndex: 1),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Cabecalho(),
-
-            _CardIncluido(),
-
-            _TabsCategoria(tabController: _tabController),
-
-            const SizedBox(height: 4),
-
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: categorias
-                    .map((cat) => ListaQuartosPage(categoria: cat))
-                    .toList(),
-              ),
-            ),
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverToBoxAdapter(child: _CardIncluido()),
           ],
+          body: Column(
+            children: [
+              _TabsCategoria(tabController: _tabController),
+              const SizedBox(height: 4),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: categorias
+                      .map((cat) => ListaQuartosPage(categoria: cat))
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-
-class _Cabecalho extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      color: AppColors.azulEscuro,
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text(
-            'Nossos Quartos',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            '12 Opções de acomodações para sua estadia',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ),
     );
   }
