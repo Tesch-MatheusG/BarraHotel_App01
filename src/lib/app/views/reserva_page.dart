@@ -500,50 +500,6 @@ class _ContadorHospedes extends StatelessWidget {
   }
 }
 
-class _CampoTexto extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final TextInputType tipo;
-
-  const _CampoTexto({
-    required this.controller,
-    required this.label,
-    required this.icon,
-    required this.tipo,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: tipo,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: AppColors.azulEscuro, size: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: AppColors.azulEscuro,
-            width: 1.5,
-          ),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        labelStyle: const TextStyle(color: Color(0xFF777777), fontSize: 13),
-      ),
-    );
-  }
-}
-
 class _ResumoFinanceiro extends StatelessWidget {
   final double preco;
   final int noites;
