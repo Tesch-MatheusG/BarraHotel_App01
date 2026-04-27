@@ -3,6 +3,7 @@ import 'quarto/quartos_page.dart';
 import '../viewmodels/quarto_viewmodel.dart';
 import '../views/bottom_nav.dart';
 import 'cores.dart';
+import 'drawer_menu.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,6 +12,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.fundoPagina,
+      drawer: const DrawerMenu(),
+      appBar: AppBar(
+        backgroundColor: AppColors.azulEscuro,
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Barra Hotel',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        elevation: 0,
+      ),
       bottomNavigationBar: BottomNav(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
