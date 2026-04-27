@@ -18,4 +18,13 @@ static List<UsuarioModel> _usuarios = [];
       return null;
     }
   }
+
+static void atualizar(UsuarioModel atualizado) {
+  final index = _usuarios.indexWhere(
+    (u) => u.email == atualizado.email,
+  );
+  if (index != -1) {
+    _usuarios[index] = atualizado;
+  }
+}
 }

@@ -13,7 +13,11 @@ class ReservaMockStore {
       _reservas.where((r) => r.status == StatusReserva.ativa).toList();
 
   static List<ReservaModel> get concluidas =>
-      _reservas.where((r) => r.status == StatusReserva.concluida).toList();
+      _reservas
+        .where((r) => 
+          r.status == StatusReserva.concluida ||
+          r.status == StatusReserva.cancelada)
+      .toList();
 
   static void cancelar(String id) {
     final reserva = _reservas.firstWhere((r) => r.id == id);
