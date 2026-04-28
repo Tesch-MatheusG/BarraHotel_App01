@@ -1,6 +1,7 @@
-import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
+import 'package:atividadep1/app/models/quarto_model.dart';
 import 'package:flutter/material.dart';
 import '../reserva_page.dart';
+import '../../views/cores.dart';
 
 class DetalheQuartoPage extends StatefulWidget {
   final Quarto quarto;
@@ -54,7 +55,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
           SliverAppBar(
             expandedHeight: 280,
             pinned: true,
-            backgroundColor: const Color(0xFF0D2A7A),
+            backgroundColor: AppColors.azulEscuro,
             leading: Padding(
               padding: const EdgeInsets.all(8),
               child: CircleAvatar(
@@ -62,7 +63,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
-                    color: Color(0xFF0D2A7A),
+                    color: AppColors.azulEscuro,
                     size: 20,
                   ),
                   onPressed: () => Navigator.pop(context),
@@ -108,7 +109,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF0D2A7A),
+                              color: AppColors.azulEscuro,
                             ),
                           ),
                           const Text(
@@ -169,10 +170,10 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEAF0FB),
+                          color: AppColors.azulClaro,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: const Color(0xFF0D2A7A).withOpacity(0.2),
+                            color: AppColors.azulEscuro.withOpacity(0.2),
                           ),
                         ),
                         child: Row(
@@ -180,7 +181,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                             Icon(
                               _iconeComodidade(c),
                               size: 18,
-                              color: const Color(0xFF0D2A7A),
+                              color: AppColors.azulEscuro,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
@@ -246,7 +247,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D2A7A),
+                        backgroundColor: AppColors.azulEscuro,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -368,7 +369,7 @@ class _Chip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: const Color(0xFF777777)),
+          Icon(icon, size: 14, color: AppColors.cinzaTexto),
           const SizedBox(width: 4),
           Text(
             label,
@@ -398,10 +399,10 @@ class _ItemInclusoDetalhe extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: const Color(0xFFEAF0FB),
+            color: AppColors.azulClaro,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 18, color: const Color(0xFF0D2A7A)),
+          child: Icon(icon, size: 18, color: AppColors.azulEscuro),
         ),
         const SizedBox(width: 12),
         Column(

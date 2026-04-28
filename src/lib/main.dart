@@ -3,11 +3,11 @@ import 'app/views/splash_page.dart';
 import 'app/views/login_page.dart';
 import 'app/views/signup_page.dart';
 import 'app/views/home_page.dart';
-import 'app/views/Quarto/detalhequarto_page.dart';
-import 'app/views/Quarto/lista_quartos_page.dart';
 import 'app/views/Quarto/quartos_page.dart';
 import 'app/views/reserva_page.dart';
-import 'app/views/cores.dart';
+import 'app/views/perfil_page.dart';
+import 'app/views/editar_perfil_page.dart';
+import 'app/views/reservas/minhas_reservas_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignupPage(),
         '/home': (context) => HomePage(),
+        '/perfil': (context) => PerfilPage(),
+        '/editar-perfil': (context) => EditarPerfilPage(),
+        '/minhas-reservas': (context) => MinhasReservasPage(),
       },
     );
   }

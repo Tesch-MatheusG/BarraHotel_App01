@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../views/cores.dart';
 import '../viewmodels/signup_viewmodel.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 // Página de cadastro de novo usuário.
 class SignupPage extends StatefulWidget {
@@ -24,6 +25,25 @@ class _SignupPageState extends State<SignupPage> {
   final endereco = TextEditingController();
   final senha = TextEditingController();
   final confirmarSenha = TextEditingController();
+
+
+  //input masks para campos numéricos.
+  final _cpfMask = MaskTextInputFormatter(
+  mask: '###.###.###-##',
+  filter: {'#': RegExp(r'[0-9]')},
+);
+
+final _telefoneMask = MaskTextInputFormatter(
+  mask: '(##) #####-####',
+  filter: {'#': RegExp(r'[0-9]')},
+);
+
+final _cepMask = MaskTextInputFormatter(
+  mask: '#####-###',
+  filter: {'#': RegExp(r'[0-9]')},
+);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +77,11 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(height: 20),
 
                 _campo(nome, 'Nome Completo'),
-                _campo(email, 'Email'),
-                _campo(telefone, 'Telefone'),
-                _campo(cpf, 'CPF'),
-                _campo(cep, 'CEP'),
+                _campo(email, 'Email', tipo: TextInputType.emailAddress),
+                _campo(telefone, 'Telefone', tipo: TextInputType.phone, mascara: _telefoneMask),
+                _campo(cpf, 'CPF', tipo: TextInputType.number, mascara: _cpfMask),
+                _campo(cep, 'CEP', tipo: TextInputType.number, mascara: _cepMask),
                 _campo(endereco, 'Endereço'),
-
                 _campo(senha, 'Senha', isSenha: true),
                 _campo(confirmarSenha, 'Confirmar Senha', isSenha: true),
 
@@ -89,6 +108,10 @@ class _SignupPageState extends State<SignupPage> {
                         nome.text,
                         email.text,
                         senha.text,
+                        cpf.text,
+                        telefone.text,
+                        cep.text,
+                        endereco.text,
                       );
 
                       Navigator.pop(context);
@@ -104,25 +127,32 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _campo(TextEditingController controller, String hint,
-      {bool isSenha = false}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextFormField(
-        controller: controller,
-        obscureText: isSenha,
-        decoration: InputDecoration(
-          hintText: hint,
-          filled: true,
-          fillColor: AppColors.cinzaCampo,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
+  Widget _campo(
+  TextEditingController controller,
+  String hint, {
+  bool isSenha = false,
+  TextInputType tipo = TextInputType.text,
+  MaskTextInputFormatter? mascara,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: TextFormField(
+      controller: controller,
+      obscureText: isSenha,
+      keyboardType: tipo,
+      inputFormatters: mascara != null ? [mascara] : [],
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: AppColors.cinzaCampo,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
         ),
-        validator: (value) =>
-            value!.isEmpty ? 'Campo obrigatório' : null,
       ),
-    );
-  }
+      validator: (value) =>
+          value!.isEmpty ? 'Campo obrigatório' : null,
+    ),
+  );
+}
 }

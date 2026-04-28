@@ -1,5 +1,9 @@
 import 'package:atividadep1/app/viewmodels/quarto_viewmodel.dart';
 import 'package:flutter/material.dart';
+import '../data/sessao.dart';
+import '../views/cores.dart';
+import '../data/reserva_mock_store.dart';
+import '../models/reserva_model.dart';
 
 // PÁGINA DE RESERVA
 // Formulário de dados do hóspede + seleção de datas + resumo financeiro
@@ -13,10 +17,8 @@ class ReservaPage extends StatefulWidget {
 }
 
 class _ReservaPageState extends State<ReservaPage> {
-  // Controladores dos campos de texto
-  final _nomeController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _telefoneController = TextEditingController();
+
+  String get _nomeUsuario => Sessao.usuarioLogado?.nome ?? '';
 
   DateTime? _checkIn;
   DateTime? _checkOut;
@@ -48,7 +50,7 @@ class _ReservaPageState extends State<ReservaPage> {
         // Aplica a cor principal do projeto no calendário
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(
-            primary: Color(0xFF0D2A7A),
+            primary: AppColors.azulEscuro,
             onPrimary: Colors.white,
           ),
         ),
@@ -73,10 +75,10 @@ class _ReservaPageState extends State<ReservaPage> {
 
   // Valida e confirma a reserva
   void _confirmar() {
-    if (_nomeController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty ||
-        _checkIn == null ||
-        _checkOut == null) {
+    if (
+      _checkIn == null ||
+      _checkOut == null
+    ) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Preencha todos os campos obrigatórios.'),
@@ -85,6 +87,18 @@ class _ReservaPageState extends State<ReservaPage> {
       );
       return;
     }
+    final reserva = ReservaModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      nomeQuarto: widget.quarto.nome,
+      tipoCama: widget.quarto.tipoCama,
+      precoPorNoite: widget.quarto.preco,
+      checkIn: _checkIn!,
+      checkOut: _checkOut!,
+      hospedes: _hospedes,
+      total: _total,
+    );
+
+    ReservaMockStore.adicionar(reserva);
     setState(() => _confirmado = true);
   }
 
@@ -98,9 +112,6 @@ class _ReservaPageState extends State<ReservaPage> {
 
   @override
   void dispose() {
-    _nomeController.dispose();
-    _emailController.dispose();
-    _telefoneController.dispose();
     super.dispose();
   }
 
@@ -112,16 +123,16 @@ class _ReservaPageState extends State<ReservaPage> {
         quarto: widget.quarto,
         checkIn: _checkIn!,
         checkOut: _checkOut!,
-        nome: _nomeController.text.trim(),
+        nome: _nomeUsuario,
         total: _total,
         noites: _noites,
       );
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppColors.fundoPagina,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0D2A7A),
+        backgroundColor: AppColors.azulEscuro,
         foregroundColor: Colors.white,
         title: const Text(
           'Confirmar Reserva',
@@ -172,7 +183,7 @@ class _ReservaPageState extends State<ReservaPage> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEAF0FB),
+                        color: AppColors.azulClaro,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -181,14 +192,14 @@ class _ReservaPageState extends State<ReservaPage> {
                           const Icon(
                             Icons.nights_stay_outlined,
                             size: 16,
-                            color: Color(0xFF0D2A7A),
+                            color: AppColors.azulEscuro,
                           ),
                           const SizedBox(width: 6),
                           Text(
                             '$_noites noite${_noites > 1 ? 's' : ''} '
                             'selecionada${_noites > 1 ? 's' : ''}',
                             style: const TextStyle(
-                              color: Color(0xFF0D2A7A),
+                              color: AppColors.azulEscuro,
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                             ),
@@ -213,27 +224,29 @@ class _ReservaPageState extends State<ReservaPage> {
 
                   const SizedBox(height: 20),
 
-                  _TituloSecao('Dados do Hóspede Principal'),
-                  _CampoTexto(
-                    controller: _nomeController,
-                    label: 'Nome completo *',
-                    icon: Icons.person_outline,
-                    tipo: TextInputType.name,
-                  ),
-                  const SizedBox(height: 12),
-                  _CampoTexto(
-                    controller: _emailController,
-                    label: 'E-mail *',
-                    icon: Icons.email_outlined,
-                    tipo: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 12),
-                  _CampoTexto(
-                    controller: _telefoneController,
-                    label: 'Telefone / WhatsApp',
-                    icon: Icons.phone_outlined,
-                    tipo: TextInputType.phone,
-                  ),
+                  _TituloSecao('Hóspede Principal'),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Color(0xFFDDDDDD)),
+                      ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person, color: AppColors.azulEscuro, size: 24),
+                        const SizedBox(width: 12,),
+                        Text(
+                          _nomeUsuario,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      ],
+                    ),  
+                    ),
+                  
 
                   const SizedBox(height: 24),
 
@@ -251,7 +264,7 @@ class _ReservaPageState extends State<ReservaPage> {
                     child: ElevatedButton(
                       onPressed: _confirmar,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D2A7A),
+                        backgroundColor: AppColors.azulEscuro,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -304,7 +317,7 @@ class _BannerQuarto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: const Color(0xFF0D2A7A),
+      color: AppColors.azulEscuro,
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -385,14 +398,14 @@ class _SeletorData extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFDDDDDD)),
+          border: Border.all(color: AppColors.cinzaBorda),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(icon, size: 13, color: const Color(0xFF0D2A7A)),
+                Icon(icon, size: 13, color:AppColors.azulEscuro),
                 const SizedBox(width: 4),
                 Text(
                   label,
@@ -441,7 +454,7 @@ class _ContadorHospedes extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -450,7 +463,7 @@ class _ContadorHospedes extends StatelessWidget {
             children: [
               const Icon(
                 Icons.person_outline,
-                color: Color(0xFF0D2A7A),
+                color: AppColors.azulEscuro,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -468,64 +481,20 @@ class _ContadorHospedes extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.remove_circle_outline),
                 color: onDecrementar != null
-                    ? const Color(0xFF0D2A7A)
+                    ? AppColors.azulEscuro
                     : Colors.grey,
                 onPressed: onDecrementar,
               ),
               IconButton(
                 icon: const Icon(Icons.add_circle_outline),
                 color: onIncrementar != null
-                    ? const Color(0xFF0D2A7A)
+                    ? AppColors.azulEscuro
                     : Colors.grey,
                 onPressed: onIncrementar,
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _CampoTexto extends StatelessWidget {
-  final TextEditingController controller;
-  final String label;
-  final IconData icon;
-  final TextInputType tipo;
-
-  const _CampoTexto({
-    required this.controller,
-    required this.label,
-    required this.icon,
-    required this.tipo,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: tipo,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: const Color(0xFF0D2A7A), size: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF0D2A7A),
-            width: 1.5,
-          ),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        labelStyle: const TextStyle(color: Color(0xFF777777), fontSize: 13),
       ),
     );
   }
@@ -549,7 +518,7 @@ class _ResumoFinanceiro extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFDDDDDD)),
+        border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Column(
         children: [
@@ -589,7 +558,7 @@ class _LinhaResumo extends StatelessWidget {
             fontSize: negrito ? 15 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
             color:
-                negrito ? const Color(0xFF1A1A1A) : const Color(0xFF777777),
+                negrito ? const Color(0xFF1A1A1A) : AppColors.cinzaTexto,
           ),
         ),
         Text(
@@ -598,7 +567,7 @@ class _LinhaResumo extends StatelessWidget {
             fontSize: negrito ? 16 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
             color:
-                negrito ? const Color(0xFF0D2A7A) : const Color(0xFF777777),
+                negrito ? AppColors.azulEscuro : AppColors.cinzaTexto,
           ),
         ),
       ],
@@ -671,7 +640,7 @@ class _TelaSucesso extends StatelessWidget {
                 ),
                 child: const Icon(
                   Icons.check_circle_rounded,
-                  color: Color(0xFF0D2A7A),
+                  color: AppColors.azulEscuro,
                   size: 64,
                 ),
               ),
@@ -683,7 +652,7 @@ class _TelaSucesso extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF0D2A7A),
+                  color: AppColors.azulEscuro,
                 ),
               ),
 
@@ -705,9 +674,9 @@ class _TelaSucesso extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
+                  color: AppColors.fundoPagina,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFDDDDDD)),
+                  border: Border.all(color: AppColors.cinzaBorda),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -736,7 +705,7 @@ class _TelaSucesso extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Total pago',
+                          'Total (Pago no Check-in)',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -747,7 +716,7 @@ class _TelaSucesso extends StatelessWidget {
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Color(0xFF0D2A7A),
+                            color: AppColors.azulEscuro,
                           ),
                         ),
                       ],
@@ -793,7 +762,7 @@ class _TelaSucesso extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pushReplacementNamed(context, '/home'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D2A7A),
+                    backgroundColor: AppColors.azulEscuro,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -818,7 +787,7 @@ class _TelaSucesso extends StatelessWidget {
                     Navigator.popUntil(context, ModalRoute.withName('/home')),
                 child: const Text(
                   'Ver outros quartos',
-                  style: TextStyle(color: Color(0xFF0D2A7A)),
+                  style: TextStyle(color: AppColors.azulEscuro),
                 ),
               ),
             ],
@@ -841,7 +810,7 @@ class _DetalheItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 17, color: const Color(0xFF0D2A7A)),
+        Icon(icon, size: 17, color: AppColors.azulEscuro),
         const SizedBox(width: 10),
         Text(
           '$label: ',
