@@ -3,6 +3,7 @@ import 'cores.dart';
 import 'drawer_menu.dart';
 import '../models/mensagem_model.dart';
 import 'bottom_nav.dart';
+import '../services/chat_service.dart';
 
 class ChatbotPage extends StatefulWidget {
   const ChatbotPage({super.key});
@@ -16,6 +17,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
   final ScrollController _scrollController = ScrollController();
   final List<MensagemModel> _mensagens = [];
   bool _carregando = false;
+  final ChatService _chatService = ChatService();
 
   @override
   void initState() {
@@ -49,35 +51,36 @@ class _ChatbotPageState extends State<ChatbotPage> {
     });
   }
 
-  Future<void> _enviarMensagem() async {
-    final texto = _controller.text.trim();
-    if (texto.isEmpty || _carregando) return;
+Future<void> _enviarMensagem() async {
+  final texto = _controller.text.trim();
+  if (texto.isEmpty || _carregando) return;
 
+  setState(() {
+    _mensagens.add(MensagemModel(texto: texto, isBot: false));
+    _carregando = true;
+    _controller.clear();
+  });
+
+  _scrollParaBaixo();
+
+  try {
+    final resposta = await _chatService.enviarMensagem(texto);
     setState(() {
-      _mensagens.add(MensagemModel(texto: texto, isBot: false));
-      _carregando = true;
-      _controller.clear();
+      _mensagens.add(MensagemModel(texto: resposta, isBot: true));
     });
-
-    _scrollParaBaixo();
-
-    // TODO: integrar com API da Anthropic
-    await Future.delayed(const Duration(seconds: 1));
-
+  } catch (e) {
     setState(() {
       _mensagens.add(MensagemModel(
-        texto:
-            'Obrigado por entrar em contato! Em breve nosso '
-            'assistente estará disponível para te ajudar. '
-            'Se preferir, entre em contato diretamente com '
-            'nossa recepção. 😊',
+        texto: 'Desculpe, tive um problema técnico. '
+               'Tente novamente ou ligue para nossa recepção. 😊',
         isBot: true,
       ));
-      _carregando = false;
     });
-
+  } finally {
+    setState(() => _carregando = false);
     _scrollParaBaixo();
   }
+}
 
   @override
   Widget build(BuildContext context) {
