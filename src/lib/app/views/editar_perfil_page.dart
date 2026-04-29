@@ -3,6 +3,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../data/sessao.dart';
 import '../models/usuario_model.dart';
 import 'cores.dart';
+import '../data/usuario_mock_store.dart';
 
 class EditarPerfilPage extends StatefulWidget {
   const EditarPerfilPage({super.key});
@@ -61,6 +62,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
         endereco: _endereco.text,
       );
       Sessao.iniciar(atualizado);
+      UsuarioMockStore.atualizar(atualizado);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

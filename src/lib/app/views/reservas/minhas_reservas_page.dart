@@ -130,6 +130,8 @@ class _CardReserva extends StatelessWidget {
         return Colors.blue;
       case StatusReserva.cancelada:
         return AppColors.vermelho;
+      case StatusReserva.emAndamento:
+        return Colors.orange;
     }
   }
 
@@ -141,6 +143,8 @@ class _CardReserva extends StatelessWidget {
         return 'Concluída';
       case StatusReserva.cancelada:
         return 'Cancelada';
+      case StatusReserva.emAndamento:
+        return 'Em Andamento';
     }
   }
 

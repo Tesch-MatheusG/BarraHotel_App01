@@ -8,6 +8,8 @@ import 'app/views/reserva_page.dart';
 import 'app/views/perfil_page.dart';
 import 'app/views/editar_perfil_page.dart';
 import 'app/views/reservas/minhas_reservas_page.dart';
+import 'app/views/chatbot_page.dart';
+import 'app/views/adm/adm_home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
         '/perfil': (context) => PerfilPage(),
         '/editar-perfil': (context) => EditarPerfilPage(),
         '/minhas-reservas': (context) => MinhasReservasPage(),
+        '/chatbot': (context) => ChatbotPage(),
+        '/adm': (context) => AdmHomePage(),
       },
     );
   }

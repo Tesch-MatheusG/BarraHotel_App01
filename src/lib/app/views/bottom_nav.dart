@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'quarto/quartos_page.dart';
 import 'cores.dart';
+import 'chatbot_page.dart';
 
 class BottomNav extends StatelessWidget {
   final int currentIndex;
@@ -26,11 +27,9 @@ class BottomNav extends StatelessWidget {
           );
         }
         if (index == 2 && currentIndex != 2) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Chatbot em breve!'),
-              backgroundColor: AppColors.azulEscuro,
-            ),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const ChatbotPage()),
           );
         }
         
