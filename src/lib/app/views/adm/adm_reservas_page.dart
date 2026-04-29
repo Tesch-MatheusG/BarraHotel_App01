@@ -54,7 +54,11 @@ class _AdmReservasPageState extends State<AdmReservasPage>
         controller: _tabController,
         children: [
           _ListaReservasAdm(
-            reservas: ReservaMockStore.ativas,
+            reservas: ReservaMockStore.todas
+            .where((r) =>
+            r.status == StatusReserva.ativa ||
+            r.status == StatusReserva.emAndamento)
+            .toList(),
             onAtualizar: () => setState(() {}),
           ),
           _ListaReservasAdm(
