@@ -45,7 +45,10 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
 
                   // LOGO
-                  Icon(Icons.wb_sunny, size: 40, color: Colors.orange),
+                  Image.asset(
+                    'assets/images/sol.png',
+                    width: 50
+                  ),
 
                   SizedBox(height: 10),
 

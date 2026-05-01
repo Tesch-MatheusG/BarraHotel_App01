@@ -43,7 +43,7 @@ class _SplashPageState extends State<SplashPage> {
 Center(
   child: Image.asset(
     'assets/images/logo.png', // caminho da logo
-    width: 180, //
+    width: 210, //
   ),
 ),
         ],
