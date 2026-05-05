@@ -23,4 +23,19 @@ class ReservaMockStore {
     final reserva = _reservas.firstWhere((r) => r.id == id);
     reserva.status = StatusReserva.cancelada;
   }
+
+  static void confirmarCheckin(String id) {
+  final reserva = _reservas.firstWhere((r) => r.id == id);
+  reserva.status = StatusReserva.emAndamento;
+}
+
+static void confirmarCheckout(String id) {
+  final reserva = _reservas.firstWhere((r) => r.id == id);
+  reserva.status = StatusReserva.concluida;
+}
+
+static void registrarPagamento(String id) {
+  final reserva = _reservas.firstWhere((r) => r.id == id);
+  reserva.pago = true;
+}
 }

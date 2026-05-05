@@ -2,6 +2,7 @@ import 'package:atividadep1/app/data/sessao.dart';
 import 'package:flutter/material.dart';
 import '../views/cores.dart';
 import '../viewmodels/login_viewmodel.dart';
+import '../models/usuario_model.dart';
 
 
 // PAGINA DE LOGIN DO APP
@@ -44,7 +45,10 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
 
                   // LOGO
-                  Icon(Icons.wb_sunny, size: 40, color: Colors.orange),
+                  Image.asset(
+                    'assets/images/sol.png',
+                    width: 50
+                  ),
 
                   SizedBox(height: 10),
 
@@ -109,8 +113,13 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (user != null) {
                           Sessao.iniciar(user);
-                          Navigator.pushReplacementNamed(context, '/home');
-                        } else {
+                          if (user.perfil == PerfilUsuario.master ||
+                              user.perfil == PerfilUsuario.adm) {
+                                Navigator.pushReplacementNamed(context, '/adm');
+                              } else {
+                                Navigator.pushReplacementNamed(context, '/home');
+                                }
+                              } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Login inválido')),
                           );
