@@ -3,6 +3,7 @@ import '../../data/quarto_mock_store.dart';
 import '../../models/quarto_model.dart';
 import '../cores.dart';
 
+// Página de gerenciamento de quartos organizada por categorias em abas
 class AdmQuartosPage extends StatefulWidget {
   const AdmQuartosPage({super.key});
 
@@ -12,17 +13,17 @@ class AdmQuartosPage extends StatefulWidget {
 
 class _AdmQuartosPageState extends State<AdmQuartosPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController _tabController; // controla a navegação entre as abas de categoria
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: categorias.length, vsync: this);
+    _tabController = TabController(length: categorias.length, vsync: this); // uma aba por categoria
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController.dispose(); // libera o controller ao sair da página
     super.dispose();
   }
 
@@ -38,21 +39,23 @@ class _AdmQuartosPageState extends State<AdmQuartosPage>
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         elevation: 0,
+        // TabBar com uma aba para cada categoria de quarto
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white60,
-          isScrollable: true,
+          isScrollable: true, // permite rolar as abas se houver muitas categorias
           tabs: categorias.map((c) => Tab(text: c.label)).toList(),
         ),
       ),
+      // Conteúdo de cada aba corresponde a uma categoria
       body: TabBarView(
         controller: _tabController,
         children: categorias
             .map((cat) => _ListaQuartosAdm(
                   categoria: cat,
-                  onAtualizar: () => setState(() {}),
+                  onAtualizar: () => setState(() {}), // reconstrói a tela após editar uma diária
                 ))
             .toList(),
       ),
@@ -60,9 +63,10 @@ class _AdmQuartosPageState extends State<AdmQuartosPage>
   }
 }
 
+// Lista os quartos de uma categoria específica
 class _ListaQuartosAdm extends StatelessWidget {
   final CategoriaQuarto categoria;
-  final VoidCallback onAtualizar;
+  final VoidCallback onAtualizar; // callback para atualizar a tela após alteração
 
   const _ListaQuartosAdm({
     required this.categoria,
@@ -85,6 +89,7 @@ class _ListaQuartosAdm extends StatelessWidget {
   }
 }
 
+// Card individual de cada quarto com opção de editar o valor da diária
 class _CardQuartoAdm extends StatelessWidget {
   final Quarto quarto;
   final VoidCallback onAtualizar;
@@ -114,7 +119,7 @@ class _CardQuartoAdm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // NOME + PREÇO
+          // NOME do quarto e PREÇO atual da diária
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -141,35 +146,21 @@ class _CardQuartoAdm extends StatelessWidget {
 
           const SizedBox(height: 8),
 
-          // TIPO DE CAMA + CAPACIDADE
+          // TIPO DE CAMA e CAPACIDADE de pessoas
           Row(
             children: [
-              const Icon(
-                Icons.bed_outlined,
-                size: 14,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.bed_outlined, size: 14, color: Colors.grey),
               const SizedBox(width: 4),
               Text(
                 quarto.tipoCama,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(width: 12),
-              const Icon(
-                Icons.person_outline,
-                size: 14,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.person_outline, size: 14, color: Colors.grey),
               const SizedBox(width: 4),
               Text(
-                '${quarto.numeroPessoas} pessoa${quarto.numeroPessoas > 1 ? 's' : ''}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                '${quarto.numeroPessoas} pessoa${quarto.numeroPessoas > 1 ? 's' : ''}', // pluralização dinâmica
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ],
           ),
@@ -178,7 +169,7 @@ class _CardQuartoAdm extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 12),
 
-          // BOTÃO EDITAR DIÁRIA
+          // BOTÃO para abrir o diálogo de edição da diária
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -200,9 +191,10 @@ class _CardQuartoAdm extends StatelessWidget {
     );
   }
 
+  // Abre diálogo para editar o valor da diária do quarto
   void _editarDiaria(BuildContext context) {
     final controller = TextEditingController(
-      text: quarto.preco.toStringAsFixed(0),
+      text: quarto.preco.toStringAsFixed(0), // preenche com o valor atual
     );
 
     showDialog(
@@ -211,7 +203,7 @@ class _CardQuartoAdm extends StatelessWidget {
         title: Text('Editar diária — ${quarto.nome}'),
         content: TextField(
           controller: controller,
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.number, // teclado numérico para facilitar a digitação
           decoration: InputDecoration(
             labelText: 'Novo valor (R\$)',
             prefixIcon: const Icon(
@@ -227,21 +219,23 @@ class _CardQuartoAdm extends StatelessWidget {
           ),
         ),
         actions: [
+          // Cancela sem salvar
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancelar'),
           ),
+          // Valida e salva o novo preço
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.azulEscuro,
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              final novoPreco = double.tryParse(controller.text);
+              final novoPreco = double.tryParse(controller.text); // converte o texto para número
               if (novoPreco != null && novoPreco > 0) {
-                quarto.atualizarPreco(novoPreco);
+                quarto.atualizarPreco(novoPreco); // atualiza o preço no modelo
                 Navigator.pop(context);
-                onAtualizar();
+                onAtualizar(); // reconstrói a lista com o novo valor
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Valor atualizado com sucesso!'),
@@ -249,6 +243,7 @@ class _CardQuartoAdm extends StatelessWidget {
                   ),
                 );
               } else {
+                // valor inválido — exibe erro sem fechar o diálogo
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Informe um valor válido.'),

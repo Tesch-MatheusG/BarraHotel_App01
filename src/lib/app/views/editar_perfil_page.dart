@@ -5,6 +5,7 @@ import '../models/usuario_model.dart';
 import 'cores.dart';
 import '../data/usuario_mock_store.dart';
 
+// Página para o usuário editar seus dados cadastrais (exceto e-mail e CPF)
 class EditarPerfilPage extends StatefulWidget {
   const EditarPerfilPage({super.key});
 
@@ -13,18 +14,21 @@ class EditarPerfilPage extends StatefulWidget {
 }
 
 class _EditarPerfilPageState extends State<EditarPerfilPage> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); // chave para validar o formulário
 
+  // Controllers dos campos editáveis
   late final TextEditingController _nome;
   late final TextEditingController _telefone;
   late final TextEditingController _cep;
   late final TextEditingController _endereco;
 
+  // Máscara de formatação para o campo de telefone
   final _telefoneMask = MaskTextInputFormatter(
     mask: '(##) #####-####',
     filter: {'#': RegExp(r'[0-9]')},
   );
 
+  // Máscara de formatação para o campo de CEP
   final _cepMask = MaskTextInputFormatter(
     mask: '#####-###',
     filter: {'#': RegExp(r'[0-9]')},
@@ -33,6 +37,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
   @override
   void initState() {
     super.initState();
+    // Pré-preenche os campos com os dados atuais do usuário logado
     final usuario = Sessao.usuarioLogado;
     _nome = TextEditingController(text: usuario?.nome ?? '');
     _telefone = TextEditingController(text: usuario?.telefone ?? '');
@@ -42,6 +47,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
   @override
   void dispose() {
+    // Libera todos os controllers ao sair da página
     _nome.dispose();
     _telefone.dispose();
     _cep.dispose();
@@ -49,9 +55,11 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
     super.dispose();
   }
 
+  // Valida o formulário, atualiza a sessão e persiste no store
   void _salvar() {
     if (_formKey.currentState!.validate()) {
       final atual = Sessao.usuarioLogado!;
+      // Cria um novo modelo mantendo e-mail, senha e CPF inalterados
       final atualizado = UsuarioModel(
         nome: _nome.text,
         email: atual.email,
@@ -61,8 +69,8 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
         cep: _cep.text,
         endereco: _endereco.text,
       );
-      Sessao.iniciar(atualizado);
-      UsuarioMockStore.atualizar(atualizado);
+      Sessao.iniciar(atualizado); // atualiza a sessão com os novos dados
+      UsuarioMockStore.atualizar(atualizado); // persiste a alteração no store
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -71,7 +79,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
         ),
       );
 
-      Navigator.pop(context);
+      Navigator.pop(context); // retorna para a página de perfil
     }
   }
 
@@ -106,6 +114,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
               const SizedBox(height: 4),
 
+              // Aviso de que e-mail e CPF são imutáveis
               const Text(
                 'E-mail e CPF não podem ser alterados.',
                 style: TextStyle(fontSize: 12, color: Colors.grey),
@@ -113,6 +122,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
               const SizedBox(height: 16),
 
+              // Campos editáveis do perfil
               _campo(
                 controller: _nome,
                 label: 'Nome Completo',
@@ -123,14 +133,14 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                 label: 'Telefone',
                 icon: Icons.phone_outlined,
                 tipo: TextInputType.phone,
-                mascara: _telefoneMask,
+                mascara: _telefoneMask, // aplica máscara (##) #####-####
               ),
               _campo(
                 controller: _cep,
                 label: 'CEP',
                 icon: Icons.location_on_outlined,
                 tipo: TextInputType.number,
-                mascara: _cepMask,
+                mascara: _cepMask, // aplica máscara #####-###
               ),
               _campo(
                 controller: _endereco,
@@ -140,6 +150,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
 
               const SizedBox(height: 24),
 
+              // Botão de salvar — aciona a validação e persistência
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -169,19 +180,20 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
     );
   }
 
+  // Builder de campo de formulário reutilizável com suporte a máscara e teclado customizado
   Widget _campo({
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    TextInputType tipo = TextInputType.text,
-    MaskTextInputFormatter? mascara,
+    TextInputType tipo = TextInputType.text, // padrão: teclado de texto
+    MaskTextInputFormatter? mascara, // opcional — aplica formatação automática
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         controller: controller,
         keyboardType: tipo,
-        inputFormatters: mascara != null ? [mascara] : [],
+        inputFormatters: mascara != null ? [mascara] : [], // aplica a máscara se fornecida
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: Icon(icon, color: AppColors.azulEscuro, size: 20),
@@ -199,11 +211,11 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
               color: AppColors.azulEscuro,
-              width: 1.5,
+              width: 1.5, // borda mais grossa ao focar no campo
             ),
           ),
         ),
-        validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null,
+        validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null, // validação simples
       ),
     );
   }

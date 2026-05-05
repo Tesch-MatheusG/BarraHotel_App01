@@ -7,13 +7,14 @@ import 'adm_reservas_page.dart';
 import 'adm_quartos_page.dart';
 import 'adm_funcionarios_page.dart';
 
+// Página inicial do painel administrativo
 class AdmHomePage extends StatelessWidget {
   const AdmHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final usuario = Sessao.usuarioLogado;
-    final isMaster = usuario?.perfil == PerfilUsuario.master;
+    final usuario = Sessao.usuarioLogado; // recupera o usuário da sessão ativa
+    final isMaster = usuario?.perfil == PerfilUsuario.master; // verifica se é perfil master
 
     return Scaffold(
       backgroundColor: AppColors.fundoPagina,
@@ -26,6 +27,7 @@ class AdmHomePage extends StatelessWidget {
         ),
         elevation: 0,
         actions: [
+          // Botão de logout no canto superior direito
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _confirmarSaida(context),
@@ -38,7 +40,7 @@ class AdmHomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // CABEÇALHO
+            // CABEÇALHO com avatar e nome do usuário logado
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -57,6 +59,7 @@ class AdmHomePage extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Nome do usuário logado
                       Text(
                         usuario?.nome ?? '',
                         style: const TextStyle(
@@ -66,6 +69,7 @@ class AdmHomePage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
+                      // Badge com o perfil do usuário (Master ou Administrador)
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -102,7 +106,7 @@ class AdmHomePage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // CARDS DE MENU
+            // CARDS DE MENU — opções disponíveis para todos os ADMs
             _CardMenu(
               icon: Icons.people_outline,
               titulo: 'Hóspedes',
@@ -133,12 +137,13 @@ class AdmHomePage extends StatelessWidget {
               ),
             ),
 
+            // Card de Funcionários visível apenas para o perfil master
             if (isMaster)
               _CardMenu(
                 icon: Icons.manage_accounts_outlined,
                 titulo: 'Funcionários',
                 descricao: 'Gerenciar acessos e promover usuários a ADM',
-                cor: AppColors.azulMedio,
+                cor: AppColors.azulMedio, // cor diferenciada para destacar acesso exclusivo
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -152,6 +157,7 @@ class AdmHomePage extends StatelessWidget {
     );
   }
 
+  // Exibe diálogo de confirmação antes de encerrar a sessão
   void _confirmarSaida(BuildContext context) {
     showDialog(
       context: context,
@@ -159,19 +165,21 @@ class AdmHomePage extends StatelessWidget {
         title: const Text('Sair da conta'),
         content: const Text('Tem certeza que deseja sair?'),
         actions: [
+          // Cancela e fecha o diálogo sem fazer nada
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancelar'),
           ),
+          // Confirma o logout, encerra a sessão e redireciona para o login
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.vermelho,
               foregroundColor: Colors.white,
             ),
             onPressed: () {
-              Sessao.encerrar();
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/login');
+              Sessao.encerrar(); // limpa o usuário da sessão
+              Navigator.pop(context); // fecha o diálogo
+              Navigator.pushReplacementNamed(context, '/login'); // volta para a tela de login
             },
             child: const Text('Sair'),
           ),
@@ -181,12 +189,13 @@ class AdmHomePage extends StatelessWidget {
   }
 }
 
+// Widget de card reutilizável para cada item do menu administrativo
 class _CardMenu extends StatelessWidget {
   final IconData icon;
   final String titulo;
   final String descricao;
-  final VoidCallback onTap;
-  final Color? cor;
+  final VoidCallback onTap; // ação ao tocar no card
+  final Color? cor; // cor opcional para personalizar o card (padrão: azulEscuro)
 
   const _CardMenu({
     required this.icon,
@@ -217,6 +226,7 @@ class _CardMenu extends StatelessWidget {
         ),
         child: Row(
           children: [
+            // Ícone do card com fundo colorido suave
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -225,11 +235,12 @@ class _CardMenu extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                color: cor ?? AppColors.azulEscuro,
+                color: cor ?? AppColors.azulEscuro, // usa cor personalizada se fornecida
                 size: 26,
               ),
             ),
             const SizedBox(width: 16),
+            // Título e descrição do item de menu
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,6 +264,7 @@ class _CardMenu extends StatelessWidget {
                 ],
               ),
             ),
+            // Seta indicando que o card é navegável
             Icon(
               Icons.chevron_right,
               color: cor ?? AppColors.azulEscuro,
