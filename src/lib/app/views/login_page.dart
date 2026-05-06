@@ -26,6 +26,45 @@ class _LoginPageState extends State<LoginPage> {
   // Instância do ViewModel responsável pela lógica de login
   final vm = LoginViewModel();
 
+  // Controla o estado de carregamento enquanto aguarda o Firebase
+  bool _carregando = false;
+
+  // Método assíncrono separado para realizar o login
+  Future<void> _fazerLogin() async {
+    // Valida o formulário antes de tentar o login
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _carregando = true);
+
+    // Chama o ViewModel com email e senha digitados
+    final user = await vm.login(
+      emailController.text,
+      senhaController.text,
+    );
+
+    setState(() => _carregando = false);
+
+    if (!mounted) return;
+
+    if (user != null) {
+      // Inicia a sessão com o usuário autenticado
+      Sessao.iniciar(user);
+      // Redireciona para área admin se for master ou adm
+      if (user.perfil == PerfilUsuario.master ||
+          user.perfil == PerfilUsuario.adm) {
+        Navigator.pushReplacementNamed(context, '/adm');
+      } else {
+        // Redireciona para home se for hóspede comum
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } else {
+      // Exibe mensagem de erro se as credenciais forem inválidas
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login inválido. Verifique e-mail e senha.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 20),
 
-                  // Botão de login
+                  // Botão de login — exibe indicador de carregamento enquanto aguarda o Firebase
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.azulBotao,
@@ -112,35 +151,18 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {
-                      // Valida o formulário antes de tentar o login
-                      if (_formKey.currentState!.validate()) {
-                        // Chama o ViewModel com email e senha digitados
-                        final user = vm.login(
-                          emailController.text,
-                          senhaController.text,
-                        );
-
-                        if (user != null) {
-                          // Inicia a sessão com o usuário autenticado
-                          Sessao.iniciar(user);
-                          // Redireciona para área admin se for master ou adm
-                          if (user.perfil == PerfilUsuario.master ||
-                              user.perfil == PerfilUsuario.adm) {
-                                Navigator.pushReplacementNamed(context, '/adm');
-                              } else {
-                                // Redireciona para home se for hóspede comum
-                                Navigator.pushReplacementNamed(context, '/home');
-                                }
-                              } else {
-                          // Exibe mensagem de erro se as credenciais forem inválidas
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Login inválido')),
-                          );
-                        }
-                      }
-                    },
-                    child: Text('Entrar'),
+                    // Desabilita o botão enquanto carrega
+                    onPressed: _carregando ? null : _fazerLogin,
+                    child: _carregando
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text('Entrar'),
                   ),
 
                   SizedBox(height: 10),

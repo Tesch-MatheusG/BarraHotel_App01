@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "89289193114",
+    "project_id": "barrahotelapp01",
+    "storage_bucket": "barrahotelapp01.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89289193114:android:23a0d445e69c019137d123",
+        "android_client_info": {
+          "package_name": "com.grupo07.atividadep1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5G5dLTDYejr5G37N1SrNVw7DJM-hXcK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

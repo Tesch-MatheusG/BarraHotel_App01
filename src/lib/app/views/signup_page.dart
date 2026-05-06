@@ -29,6 +29,9 @@ class _SignupPageState extends State<SignupPage> {
   final senha = TextEditingController();
   final confirmarSenha = TextEditingController();
 
+  // Controla o estado de carregamento enquanto aguarda o Firebase
+  bool _carregando = false;
+
   // Máscara para o campo CPF no formato ###.###.###-##
   final _cpfMask = MaskTextInputFormatter(
     mask: '###.###.###-##',
@@ -46,6 +49,53 @@ class _SignupPageState extends State<SignupPage> {
     mask: '#####-###',
     filter: {'#': RegExp(r'[0-9]')},
   );
+
+  // Método assíncrono separado para realizar o cadastro
+  Future<void> _fazerCadastro() async {
+    // Valida todos os campos antes de prosseguir
+    if (!_formKey.currentState!.validate()) return;
+
+    // Verifica se as senhas digitadas são iguais
+    if (senha.text != confirmarSenha.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Senhas não coincidem')),
+      );
+      return;
+    }
+
+    setState(() => _carregando = true);
+
+    // Chama o ViewModel para registrar o novo usuário no Firebase
+    final sucesso = await vm.cadastrar(
+      nome.text,
+      email.text,
+      senha.text,
+      cpf.text,
+      telefone.text,
+      cep.text,
+      endereco.text,
+    );
+
+    setState(() => _carregando = false);
+
+    if (!mounted) return;
+
+    if (sucesso) {
+      // Exibe confirmação e volta para a tela de login após o cadastro
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Conta criada com sucesso!')),
+      );
+      Navigator.pop(context);
+    } else {
+      // Exibe erro — pode ser email já cadastrado ou senha fraca (mín. 6 caracteres)
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro ao cadastrar. Verifique se o e-mail já está em uso ou se a senha tem no mínimo 6 caracteres.'),
+          backgroundColor: Color(0xFFC40000),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,42 +150,25 @@ class _SignupPageState extends State<SignupPage> {
 
                 SizedBox(height: 20),
 
-                // Botão de envio do cadastro
+                // Botão de cadastro — exibe spinner enquanto aguarda o Firebase
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.azulBotao,
                     padding: EdgeInsets.symmetric(
                         horizontal: 40, vertical: 12),
                   ),
-                  onPressed: () {
-
-                    // Valida todos os campos antes de prosseguir
-                    if (_formKey.currentState!.validate()) {
-
-                      // Verifica se as senhas digitadas são iguais
-                      if (senha.text != confirmarSenha.text) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Senhas não coincidem')),
-                        );
-                        return;
-                      }
-
-                      // Chama o ViewModel para registrar o novo usuário
-                      vm.cadastrar(
-                        nome.text,
-                        email.text,
-                        senha.text,
-                        cpf.text,
-                        telefone.text,
-                        cep.text,
-                        endereco.text,
-                      );
-
-                      // Volta para a tela anterior (login) após o cadastro
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text('Cadastrar'),
+                  // Desabilita o botão enquanto carrega
+                  onPressed: _carregando ? null : _fazerCadastro,
+                  child: _carregando
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text('Cadastrar'),
                 ),
               ],
             ),
