@@ -1,26 +1,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../data/usuario_mock_store.dart';
 import '../models/usuario_model.dart';
 
-// ViewModel responsável pela lógica de autenticação do login
 class LoginViewModel {
-
-  // Instância do FirebaseAuth para autenticação
   final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
-  // Tenta autenticar o usuário no Firebase e retorna o modelo local se bem-sucedido
   Future<UsuarioModel?> login(String email, String senha) async {
     try {
-      // Realiza o login no Firebase com email e senha
-      await _auth.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: senha,
       );
-      // Se autenticou no Firebase, busca o usuário no mock local para manter os dados de perfil
-      return UsuarioMockStore.autenticar(email, senha);
-    } catch (e) {
-      // Retorna null em caso de credenciais inválidas ou erro de rede
+
+      // Busca os dados extras do usuário no Firestore
+      final doc = await _firestore
+          .collection('usuarios')
+          .doc(credential.user!.uid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        final perfil = data['perfil'] == 'master'
+            ? PerfilUsuario.master
+            : data['perfil'] == 'adm'
+                ? PerfilUsuario.adm
+                : PerfilUsuario.cliente;
+
+        return UsuarioModel(
+          nome: data['nome'] ?? '',
+          email: data['email'] ?? '',
+          senha: senha,
+          cpf: data['cpf'] ?? '',
+          telefone: data['telefone'] ?? '',
+          cep: data['cep'] ?? '',
+          endereco: data['endereco'] ?? '',
+          perfil: perfil,
+        );
+      }
+
       return null;
+    } catch (e) {
+      // Fallback para o mock local (ADM master)
+      return UsuarioMockStore.autenticar(email, senha);
     }
   }
 }
