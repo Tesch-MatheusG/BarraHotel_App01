@@ -1,0 +1,33 @@
+@startuml Chatbot
+actor Cliente
+participant "ChatbotPage" as CP
+participant "ChatService" as CS
+participant "API Gemini" as API
+
+Cliente -> CP: Acessa tela do Assistente
+CP --> Cliente: Exibe mensagem de boas-vindas
+
+loop Conversa ativa
+    Cliente -> CP: Digita e envia mensagem
+    CP -> CP: Adiciona mensagem ao histórico
+    CP --> Cliente: Exibe animação de digitando
+
+    CP -> CS: enviarMensagem(texto)
+    CS -> API: POST com histórico + system prompt
+
+    alt Resposta com sucesso
+        API --> CS: Resposta do assistente
+        CS --> CP: Texto da resposta
+        CP --> Cliente: Exibe resposta do assistente
+
+        opt Dúvida fora do escopo
+            CP --> Cliente: Sugere contato com atendente humano
+        end
+
+    else Falha na API
+        API --> CS: Erro
+        CS --> CP: Exception
+        CP --> Cliente: Exibe mensagem de erro
+    end
+end
+@enduml

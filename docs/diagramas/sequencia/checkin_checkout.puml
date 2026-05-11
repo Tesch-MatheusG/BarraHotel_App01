@@ -1,0 +1,35 @@
+@startuml CheckinCheckout
+actor ADM
+participant "AdmReservasPage" as AR
+participant "ReservaMockStore" as RMS
+
+ADM -> AR: Acessa painel de Reservas
+AR -> RMS: ativas + emAndamento
+RMS --> AR: Lista de reservas
+AR --> ADM: Exibe reservas ativas
+
+alt Confirmar Check-in
+    ADM -> AR: Clica em Check-in
+    AR --> ADM: Exibe confirmação
+    ADM -> AR: Confirma
+    AR -> RMS: confirmarCheckin(id)
+    RMS --> AR: status = emAndamento
+    AR --> ADM: Check-in confirmado
+
+else Confirmar Check-out
+    ADM -> AR: Clica em Check-out
+    AR --> ADM: Exibe confirmação
+    ADM -> AR: Confirma
+    AR -> RMS: confirmarCheckout(id)
+    RMS --> AR: status = concluida
+    AR --> ADM: Check-out confirmado
+
+else Registrar Pagamento
+    ADM -> AR: Clica em Pago
+    AR --> ADM: Exibe valor e confirmação
+    ADM -> AR: Confirma
+    AR -> RMS: registrarPagamento(id)
+    RMS --> AR: pago = true
+    AR --> ADM: Pagamento registrado
+end
+@enduml

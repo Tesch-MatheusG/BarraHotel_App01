@@ -1,0 +1,33 @@
+@startuml Cadastro
+actor Usuário
+participant "SignupPage" as SP
+participant "SignupViewModel" as SVM
+participant "MLKit" as ML
+participant "UsuarioMockStore" as UMS
+
+Usuário -> SP: Preenche formulário de cadastro
+SP -> SP: Valida campos obrigatórios
+
+alt Campos válidos
+    SP --> Usuário: Solicita foto com documento
+
+    Usuário -> SP: Captura imagem
+    SP -> ML: analisarImagem(imagem)
+
+    alt Rosto e documento detectados
+        ML --> SP: Verificação aprovada
+        SP -> SVM: cadastrar(dados)
+        SVM -> UMS: adicionarUsuario(usuario)
+        UMS --> SVM: OK
+        SVM --> SP: OK
+        SP --> Usuário: Cadastro concluído
+        SP --> Usuário: Redireciona para Login
+    else Imagem inválida
+        ML --> SP: Verificação reprovada
+        SP --> Usuário: Solicita nova foto
+    end
+
+else Campos inválidos
+    SP --> Usuário: Destaca campos obrigatórios
+end
+@enduml
