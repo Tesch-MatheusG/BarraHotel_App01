@@ -39,15 +39,7 @@
 * Tela de chat no app
 * Chatbot responde dúvidas sobre o hotel, quartos e reservas
 
-## Épico 6 – Verificação de Identidade com IA
-
-* Integração com Google ML Kit (Flutter)
-* Tela de captura de imagem pelo app
-* Validação de presença de rosto na imagem
-* Validação de presença de documento na imagem
-* Acionamento apenas no primeiro cadastro ou reserva
-
-## Épico 7 – Infraestrutura e Banco de Dados
+## Épico 6 – Infraestrutura e Banco de Dados
 
 * Configuração do Firebase no projeto Flutter
 * Migração do mock de usuários para o Firestore

@@ -10,16 +10,12 @@
 2. O sistema exibe o formulário de cadastro
 3. O cliente preenche: nome completo, CPF, e-mail, telefone e senha
 4. O sistema valida os dados informados
-5. O sistema solicita a verificação de identidade
-6. O cliente captura uma imagem contendo rosto e documento
-7. O sistema valida a imagem via Google ML Kit
-8. O sistema cria a conta do cliente via Firebase Authentication
-9. O sistema redireciona o cliente para a tela inicial
+5. O sistema cria a conta do cliente via Firebase Authentication
+6. O sistema redireciona o cliente para a tela inicial
 
 **Fluxo Alternativo:**
 - **FA01:** E-mail já cadastrado → o sistema informa que o e-mail já está em uso
-- **FA02:** Imagem inválida (sem rosto ou sem documento) → o sistema solicita nova captura
-- **FA03:** Dados incompletos → o sistema destaca os campos obrigatórios não preenchidos
+- **FA02:** Dados incompletos → o sistema destaca os campos obrigatórios não preenchidos
 
 ---
 
@@ -72,7 +68,7 @@
 4. O sistema registra a reserva associada ao cliente no Firestore
 5. O sistema atualiza o status do quarto para ocupado no período
 6. O sistema exibe a tela de confirmação da reserva
-7. O sistema informa que o pagamento será realizado presencialmente no check-in ou check-out
+7. O sistema informa que o pagamento será realizado presencialmente no check-in
 
 **Fluxo Alternativo:**
 - **FA01:** Quarto ocupado no período → o sistema informa indisponibilidade e sugere outros quartos
