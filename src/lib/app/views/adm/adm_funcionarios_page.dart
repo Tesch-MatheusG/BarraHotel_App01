@@ -3,6 +3,7 @@ import '../../data/usuario_mock_store.dart';
 import '../../models/usuario_model.dart';
 import '../cores.dart';
 
+// Página de gerenciamento de funcionários — acessível apenas pelo perfil master
 class AdmFuncionariosPage extends StatefulWidget {
   const AdmFuncionariosPage({super.key});
 
@@ -11,24 +12,25 @@ class AdmFuncionariosPage extends StatefulWidget {
 }
 
 class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
-  final TextEditingController _buscaController = TextEditingController();
-  String _busca = '';
+  final TextEditingController _buscaController = TextEditingController(); // controlador do campo de busca
+  String _busca = ''; // texto digitado na busca
 
   @override
   void dispose() {
-    _buscaController.dispose();
+    _buscaController.dispose(); // libera o controller ao sair da página
     super.dispose();
   }
 
+  // Retorna usuários filtrados pela busca, excluindo o perfil master da listagem
   List<UsuarioModel> get _usuariosFiltrados {
     final todos = UsuarioMockStore.todos
-        .where((u) => u.perfil != PerfilUsuario.master)
+        .where((u) => u.perfil != PerfilUsuario.master) // oculta o master da lista
         .toList();
-    if (_busca.isEmpty) return todos;
+    if (_busca.isEmpty) return todos; // sem filtro, retorna todos
     return todos
         .where((u) =>
             u.nome.toLowerCase().contains(_busca.toLowerCase()) ||
-            u.email.toLowerCase().contains(_busca.toLowerCase()))
+            u.email.toLowerCase().contains(_busca.toLowerCase())) // filtra por nome ou e-mail
         .toList();
   }
 
@@ -54,7 +56,7 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
             color: Colors.white,
             child: TextField(
               controller: _buscaController,
-              onChanged: (v) => setState(() => _busca = v),
+              onChanged: (v) => setState(() => _busca = v), // atualiza o filtro a cada caractere digitado
               decoration: InputDecoration(
                 hintText: 'Buscar por nome ou e-mail...',
                 prefixIcon: const Icon(
@@ -75,7 +77,7 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
             ),
           ),
 
-          // LEGENDA
+          // LEGENDA informando a funcionalidade da tela
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Row(
@@ -96,9 +98,10 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
             ),
           ),
 
-          // LISTA
+          // LISTA de usuários filtrados
           Expanded(
             child: _usuariosFiltrados.isEmpty
+                // estado vazio — nenhum usuário encontrado na busca
                 ? const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -119,6 +122,7 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
                       ],
                     ),
                   )
+                // lista com card de cada usuário
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _usuariosFiltrados.length,
@@ -126,7 +130,7 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
                     itemBuilder: (context, index) {
                       return _CardUsuario(
                         usuario: _usuariosFiltrados[index],
-                        onAtualizar: () => setState(() {}),
+                        onAtualizar: () => setState(() {}), // reconstrói a lista após promoção/rebaixamento
                       );
                     },
                   ),
@@ -137,15 +141,17 @@ class _AdmFuncionariosPageState extends State<AdmFuncionariosPage> {
   }
 }
 
+// Card individual de cada usuário na listagem
 class _CardUsuario extends StatelessWidget {
   final UsuarioModel usuario;
-  final VoidCallback onAtualizar;
+  final VoidCallback onAtualizar; // callback para atualizar a lista após mudança de perfil
 
   const _CardUsuario({
     required this.usuario,
     required this.onAtualizar,
   });
 
+  // Verifica se o usuário atual é administrador
   bool get _isAdm => usuario.perfil == PerfilUsuario.adm;
 
   @override
@@ -157,8 +163,8 @@ class _CardUsuario extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: _isAdm
-              ? AppColors.azulEscuro.withOpacity(0.3)
-              : AppColors.cinzaBorda,
+              ? AppColors.azulEscuro.withOpacity(0.3) // borda azul para ADMs
+              : AppColors.cinzaBorda, // borda cinza para clientes
         ),
         boxShadow: [
           BoxShadow(
@@ -171,14 +177,14 @@ class _CardUsuario extends StatelessWidget {
       child: Row(
         children: [
 
-          // AVATAR
+          // AVATAR com ícone diferente por perfil
           CircleAvatar(
             radius: 24,
             backgroundColor: _isAdm
                 ? AppColors.azulEscuro.withOpacity(0.1)
                 : AppColors.azulClaro,
             child: Icon(
-              _isAdm ? Icons.manage_accounts : Icons.person,
+              _isAdm ? Icons.manage_accounts : Icons.person, // ícone de adm ou cliente
               color: AppColors.azulEscuro,
               size: 26,
             ),
@@ -186,7 +192,7 @@ class _CardUsuario extends StatelessWidget {
 
           const SizedBox(width: 14),
 
-          // DADOS
+          // DADOS do usuário (nome, e-mail e badge de perfil)
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,6 +214,7 @@ class _CardUsuario extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
+                // Badge colorida indicando o perfil do usuário
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -232,12 +239,12 @@ class _CardUsuario extends StatelessWidget {
             ),
           ),
 
-          // BOTÃO DE AÇÃO
+          // BOTÃO que alterna entre promover e rebaixar conforme o perfil atual
           TextButton(
             onPressed: () => _confirmarMudancaPerfil(context),
             style: TextButton.styleFrom(
               foregroundColor:
-                  _isAdm ? AppColors.vermelho : AppColors.azulEscuro,
+                  _isAdm ? AppColors.vermelho : AppColors.azulEscuro, // vermelho para rebaixar, azul para promover
             ),
             child: Text(
               _isAdm ? 'Rebaixar' : 'Promover',
@@ -249,8 +256,9 @@ class _CardUsuario extends StatelessWidget {
     );
   }
 
+  // Exibe diálogo de confirmação antes de alterar o perfil do usuário
   void _confirmarMudancaPerfil(BuildContext context) {
-    final promovendo = !_isAdm;
+    final promovendo = !_isAdm; // true = promovendo para ADM, false = rebaixando para cliente
 
     showDialog(
       context: context,
@@ -260,12 +268,14 @@ class _CardUsuario extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Mensagem descritiva da ação
             Text(
               promovendo
                   ? 'Deseja promover "${usuario.nome}" a ADM?\n\nEle terá acesso ao painel administrativo.'
                   : 'Deseja rebaixar "${usuario.nome}" para Cliente?\n\nEle perderá acesso ao painel administrativo.',
             ),
             const SizedBox(height: 12),
+            // Bloco informativo com ícone — verde para promoção, vermelho para rebaixamento
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -303,10 +313,12 @@ class _CardUsuario extends StatelessWidget {
           ],
         ),
         actions: [
+          // Botão de cancelar — fecha o diálogo sem alterar nada
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancelar'),
           ),
+          // Botão de confirmação — aplica a mudança de perfil e exibe snackbar
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor:
@@ -316,10 +328,10 @@ class _CardUsuario extends StatelessWidget {
             onPressed: () {
               UsuarioMockStore.promover(
                 usuario.email,
-                promovendo ? PerfilUsuario.adm : PerfilUsuario.cliente,
+                promovendo ? PerfilUsuario.adm : PerfilUsuario.cliente, // define o novo perfil
               );
-              Navigator.pop(context);
-              onAtualizar();
+              Navigator.pop(context); // fecha o diálogo
+              onAtualizar(); // atualiza a lista na tela
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

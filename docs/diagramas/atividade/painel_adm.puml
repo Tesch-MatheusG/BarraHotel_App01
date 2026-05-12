@@ -1,0 +1,35 @@
+@startuml AtividadeAdm
+start
+
+:ADM acessa painel administrativo;
+
+fork
+  :Gerenciar Reservas;
+  :Visualiza lista de reservas ativas;
+
+  if (Ação selecionada?) then (Check-in)
+    :Confirma check-in;
+    :Status → Em Andamento;
+  else if (Check-out)
+    :Confirma check-out;
+    :Status → Concluída;
+  else (Pagamento)
+    :Registra pagamento;
+    :Marca como PAGO;
+  endif
+
+fork again
+  :Gerenciar Quartos;
+  :Visualiza lista de quartos;
+  :Edita valor da diária;
+  :Salva novo valor;
+
+fork again
+  :Ver Hóspedes;
+  :Visualiza lista de clientes;
+  :Consulta dados do hóspede;
+
+end fork
+
+stop
+@enduml

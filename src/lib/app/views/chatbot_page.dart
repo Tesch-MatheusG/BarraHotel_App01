@@ -5,6 +5,7 @@ import '../models/mensagem_model.dart';
 import 'bottom_nav.dart';
 import '../services/chat_service.dart';
 
+// Página do chatbot com histórico de mensagens e campo de envio
 class ChatbotPage extends StatefulWidget {
   const ChatbotPage({super.key});
 
@@ -13,16 +14,16 @@ class ChatbotPage extends StatefulWidget {
 }
 
 class _ChatbotPageState extends State<ChatbotPage> {
-  final TextEditingController _controller = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-  final List<MensagemModel> _mensagens = [];
-  bool _carregando = false;
-  final ChatService _chatService = ChatService();
+  final TextEditingController _controller = TextEditingController(); // campo de texto do usuário
+  final ScrollController _scrollController = ScrollController(); // controla o scroll da lista de mensagens
+  final List<MensagemModel> _mensagens = []; // histórico de mensagens da conversa
+  bool _carregando = false; // indica se aguarda resposta do bot
+  final ChatService _chatService = ChatService(); // serviço responsável pela comunicação com a IA
 
   @override
   void initState() {
     super.initState();
-    // Mensagem de boas-vindas do chatbot
+    // Mensagem de boas-vindas exibida ao abrir o chat
     _mensagens.add(MensagemModel(
       texto:
           'Olá! Sou o assistente virtual do Barra Hotel. 😊\n'
@@ -35,10 +36,11 @@ class _ChatbotPageState extends State<ChatbotPage> {
   @override
   void dispose() {
     _controller.dispose();
-    _scrollController.dispose();
+    _scrollController.dispose(); // libera os controllers ao sair da página
     super.dispose();
   }
 
+  // Rola a lista até a última mensagem após o frame ser renderizado
   void _scrollParaBaixo() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -51,36 +53,38 @@ class _ChatbotPageState extends State<ChatbotPage> {
     });
   }
 
-Future<void> _enviarMensagem() async {
-  final texto = _controller.text.trim();
-  if (texto.isEmpty || _carregando) return;
+  // Envia a mensagem do usuário e aguarda a resposta do chatbot
+  Future<void> _enviarMensagem() async {
+    final texto = _controller.text.trim();
+    if (texto.isEmpty || _carregando) return; // ignora envio vazio ou enquanto carrega
 
-  setState(() {
-    _mensagens.add(MensagemModel(texto: texto, isBot: false));
-    _carregando = true;
-    _controller.clear();
-  });
-
-  _scrollParaBaixo();
-
-  try {
-    final resposta = await _chatService.enviarMensagem(texto);
     setState(() {
-      _mensagens.add(MensagemModel(texto: resposta, isBot: true));
+      _mensagens.add(MensagemModel(texto: texto, isBot: false)); // adiciona mensagem do usuário
+      _carregando = true;
+      _controller.clear();
     });
-  } catch (e) {
-    setState(() {
-      _mensagens.add(MensagemModel(
-        texto: 'Desculpe, tive um problema técnico. '
-               'Tente novamente ou ligue para nossa recepção. 😊',
-        isBot: true,
-      ));
-    });
-  } finally {
-    setState(() => _carregando = false);
+
     _scrollParaBaixo();
+
+    try {
+      final resposta = await _chatService.enviarMensagem(texto); // chama a API do chatbot
+      setState(() {
+        _mensagens.add(MensagemModel(texto: resposta, isBot: true)); // adiciona resposta do bot
+      });
+    } catch (e) {
+      // Exibe mensagem de erro amigável em caso de falha na requisição
+      setState(() {
+        _mensagens.add(MensagemModel(
+          texto: 'Desculpe, tive um problema técnico. '
+                 'Tente novamente ou ligue para nossa recepção. 😊',
+          isBot: true,
+        ));
+      });
+    } finally {
+      setState(() => _carregando = false); // encerra o estado de carregamento
+      _scrollParaBaixo();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +94,7 @@ Future<void> _enviarMensagem() async {
       appBar: AppBar(
         backgroundColor: AppColors.azulEscuro,
         foregroundColor: Colors.white,
+        // Título com ícone do bot e nome do hotel
         title: Row(
           children: [
             Container(
@@ -124,22 +129,24 @@ Future<void> _enviarMensagem() async {
         ),
         elevation: 0,
       ),
-      bottomNavigationBar: BottomNav(currentIndex: 2),
+      bottomNavigationBar: BottomNav(currentIndex: 2), // aba "Assistente" ativa
       body: Column(
         children: [
+          // Lista de mensagens — inclui bolha de digitando ao aguardar resposta
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
-              itemCount: _mensagens.length + (_carregando ? 1 : 0),
+              itemCount: _mensagens.length + (_carregando ? 1 : 0), // +1 para a bolha de digitando
               itemBuilder: (context, index) {
                 if (index == _mensagens.length) {
-                  return _BolhaDigitando();
+                  return _BolhaDigitando(); // exibe animação enquanto o bot responde
                 }
                 return _BolhaMensagem(mensagem: _mensagens[index]);
               },
             ),
           ),
+          // Campo de texto e botão de envio na parte inferior
           _CampoEnvio(
             controller: _controller,
             carregando: _carregando,
@@ -151,6 +158,7 @@ Future<void> _enviarMensagem() async {
   }
 }
 
+// Bolha de mensagem — alinha à esquerda para o bot e à direita para o usuário
 class _BolhaMensagem extends StatelessWidget {
   final MensagemModel mensagem;
 
@@ -167,6 +175,7 @@ class _BolhaMensagem extends StatelessWidget {
             isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          // Avatar do bot — exibido apenas nas mensagens do bot
           if (isBot) ...[
             Container(
               width: 32,
@@ -183,6 +192,7 @@ class _BolhaMensagem extends StatelessWidget {
               ),
             ),
           ],
+          // Bolha com o texto da mensagem
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(
@@ -190,11 +200,11 @@ class _BolhaMensagem extends StatelessWidget {
                 vertical: 10,
               ),
               decoration: BoxDecoration(
-                color: isBot ? Colors.white : AppColors.azulEscuro,
+                color: isBot ? Colors.white : AppColors.azulEscuro, // branco para bot, azul para usuário
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
                   topRight: const Radius.circular(16),
-                  bottomLeft: Radius.circular(isBot ? 4 : 16),
+                  bottomLeft: Radius.circular(isBot ? 4 : 16), // canto reto indica o lado do remetente
                   bottomRight: Radius.circular(isBot ? 16 : 4),
                 ),
                 boxShadow: [
@@ -215,6 +225,7 @@ class _BolhaMensagem extends StatelessWidget {
               ),
             ),
           ),
+          // Avatar do usuário — exibido apenas nas mensagens do usuário
           if (!isBot) ...[
             Container(
               width: 32,
@@ -237,6 +248,7 @@ class _BolhaMensagem extends StatelessWidget {
   }
 }
 
+// Bolha animada exibida enquanto o bot está processando a resposta
 class _BolhaDigitando extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -244,6 +256,7 @@ class _BolhaDigitando extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
+          // Avatar do bot
           Container(
             width: 32,
             height: 32,
@@ -258,6 +271,7 @@ class _BolhaDigitando extends StatelessWidget {
               size: 18,
             ),
           ),
+          // Bolha com os três pontos pulsantes
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -279,6 +293,7 @@ class _BolhaDigitando extends StatelessWidget {
                 ),
               ],
             ),
+            // Três pontos com delays diferentes para criar efeito de digitação
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -296,8 +311,10 @@ class _BolhaDigitando extends StatelessWidget {
   }
 }
 
+// Ponto animado com fade — compõe a animação de digitando do bot
 class _Ponto extends StatefulWidget {
-  final int delay;
+  final int delay; // atraso em ms para desincronizar a animação entre os pontos
+
   const _Ponto({required this.delay});
 
   @override
@@ -316,10 +333,11 @@ class _PontoState extends State<_Ponto>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
+    // Aguarda o delay antes de iniciar a animação em loop
     Future.delayed(Duration(milliseconds: widget.delay), () {
-      if (mounted) _controller.repeat(reverse: true);
+      if (mounted) _controller.repeat(reverse: true); // pulsa entre opaco e transparente
     });
-    _animation = Tween(begin: 0.4, end: 1.0).animate(_controller);
+    _animation = Tween(begin: 0.4, end: 1.0).animate(_controller); // intervalo de opacidade
   }
 
   @override
@@ -344,9 +362,10 @@ class _PontoState extends State<_Ponto>
   }
 }
 
+// Campo de texto e botão de envio fixos na parte inferior da tela
 class _CampoEnvio extends StatelessWidget {
   final TextEditingController controller;
-  final bool carregando;
+  final bool carregando; // desativa o botão enquanto aguarda resposta
   final VoidCallback onEnviar;
 
   const _CampoEnvio({
@@ -365,7 +384,7 @@ class _CampoEnvio extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.06),
             blurRadius: 8,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, -2), // sombra para cima, separando do chat
           ),
         ],
       ),
@@ -376,7 +395,7 @@ class _CampoEnvio extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
-                onSubmitted: (_) => onEnviar(),
+                onSubmitted: (_) => onEnviar(), // envia ao pressionar "enviar" no teclado
                 textInputAction: TextInputAction.send,
                 decoration: InputDecoration(
                   hintText: 'Digite sua mensagem...',
@@ -395,6 +414,7 @@ class _CampoEnvio extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
+            // Botão de envio — desabilitado enquanto aguarda resposta
             Container(
               decoration: const BoxDecoration(
                 color: AppColors.azulEscuro,

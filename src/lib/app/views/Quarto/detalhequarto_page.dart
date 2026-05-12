@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../reserva_page.dart';
 import '../../views/cores.dart';
 
+// Página de detalhes de um quarto com carrossel, comodidades e botão de reserva
 class DetalheQuartoPage extends StatefulWidget {
-  final Quarto quarto;
+  final Quarto quarto; // quarto recebido da tela anterior
 
   const DetalheQuartoPage({super.key, required this.quarto});
 
@@ -13,17 +14,20 @@ class DetalheQuartoPage extends StatefulWidget {
 }
 
 class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
-  final PageController _pageController = PageController();
-  int _paginaAtual = 0;
+  final PageController _pageController = PageController(); // controla o carrossel de imagens
+  int _paginaAtual = 0; // índice da página atual do carrossel
 
+  // Exibe 3 slides se houver mais de 3 comodidades, senão exibe 2
   int get _total => widget.quarto.comodidades.length > 3 ? 3 : 2;
 
+  // Paleta de tons de azul acinzentado para os slides do carrossel
   static const List<Color> _cores = [
     Color(0xFF607D8B),
     Color(0xFF546E7A),
     Color(0xFF455A64),
   ];
 
+  // Retorna o ícone correspondente à comodidade pelo nome
   IconData _iconeComodidade(String comodidade) {
     final lower = comodidade.toLowerCase();
     if (lower.contains('tv')) return Icons.tv;
@@ -35,12 +39,12 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
       return Icons.beach_access;
     }
     if (lower.contains('varanda')) return Icons.deck;
-    return Icons.check_circle_outline;
+    return Icons.check_circle_outline; // ícone genérico para comodidades não mapeadas
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController.dispose(); // libera o controller ao sair da página
     super.dispose();
   }
 
@@ -52,9 +56,10 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
+          // AppBar expansível com carrossel de imagens
           SliverAppBar(
             expandedHeight: 280,
-            pinned: true,
+            pinned: true, // mantém a AppBar visível ao rolar
             backgroundColor: AppColors.azulEscuro,
             leading: Padding(
               padding: const EdgeInsets.all(8),
@@ -76,17 +81,19 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                 cores: _cores,
                 pageController: _pageController,
                 paginaAtual: _paginaAtual,
-                onPageChanged: (p) => setState(() => _paginaAtual = p),
+                onPageChanged: (p) => setState(() => _paginaAtual = p), // atualiza os indicadores
               ),
             ),
           ),
 
+          // Conteúdo principal da página
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // NOME do quarto e PREÇO por noite
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +133,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
 
                   const SizedBox(height: 12),
 
+                  // CHIPS com capacidade de pessoas e tipo de cama
                   Wrap(
                     spacing: 8,
                     children: [
@@ -156,10 +164,11 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
 
                   const SizedBox(height: 12),
 
+                  // GRID de comodidades com ícone e nome de cada item
                   GridView.count(
                     crossAxisCount: 2,
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(), // desativa scroll próprio do grid
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     childAspectRatio: 3.5,
@@ -179,7 +188,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                         child: Row(
                           children: [
                             Icon(
-                              _iconeComodidade(c),
+                              _iconeComodidade(c), // ícone dinâmico baseado no nome da comodidade
                               size: 18,
                               color: AppColors.azulEscuro,
                             ),
@@ -191,7 +200,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.ellipsis, // corta texto longo com reticências
                               ),
                             ),
                           ],
@@ -215,6 +224,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
 
                   const SizedBox(height: 12),
 
+                  // ITENS INCLUSOS — fixos para todos os quartos
                   _ItemInclusoDetalhe(
                     icon: Icons.free_breakfast_outlined,
                     titulo: 'Café da Manhã Completo',
@@ -235,6 +245,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
 
                   const SizedBox(height: 32),
 
+                  // BOTÃO DE RESERVA — navega para a página de reserva com o quarto selecionado
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -276,12 +287,13 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
   }
 }
 
+// Carrossel de slides com placeholder de imagens e indicadores de página
 class _CarrosselGrande extends StatelessWidget {
-  final int total;
-  final List<Color> cores;
+  final int total; // total de slides
+  final List<Color> cores; // cores de fundo de cada slide
   final PageController pageController;
-  final int paginaAtual;
-  final ValueChanged<int> onPageChanged;
+  final int paginaAtual; // índice do slide visível
+  final ValueChanged<int> onPageChanged; // callback ao trocar de slide
 
   const _CarrosselGrande({
     required this.total,
@@ -295,13 +307,14 @@ class _CarrosselGrande extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Slides do carrossel com cor de fundo e placeholder de foto
         PageView.builder(
           controller: pageController,
           itemCount: total,
           onPageChanged: onPageChanged,
           itemBuilder: (_, index) {
             return Container(
-              color: cores[index % cores.length],
+              color: cores[index % cores.length], // cicla pelas cores disponíveis
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -309,7 +322,7 @@ class _CarrosselGrande extends StatelessWidget {
                   Icon(
                     Icons.bed,
                     size: 80,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withOpacity(0.4), // ícone placeholder semitransparente
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -324,6 +337,7 @@ class _CarrosselGrande extends StatelessWidget {
             );
           },
         ),
+        // Indicadores de página (bolinhas) na parte inferior do carrossel
         Positioned(
           bottom: 16,
           left: 0,
@@ -333,14 +347,14 @@ class _CarrosselGrande extends StatelessWidget {
             children: List.generate(
               total,
               (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 250), // animação suave ao trocar de slide
                 margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: paginaAtual == i ? 20 : 7,
+                width: paginaAtual == i ? 20 : 7, // indicador ativo é mais largo
                 height: 7,
                 decoration: BoxDecoration(
                   color: paginaAtual == i
                       ? Colors.white
-                      : Colors.white.withOpacity(0.5),
+                      : Colors.white.withOpacity(0.5), // ativo mais opaco
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -352,6 +366,7 @@ class _CarrosselGrande extends StatelessWidget {
   }
 }
 
+// Chip reutilizável para exibir uma informação rápida com ícone e texto
 class _Chip extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -381,10 +396,11 @@ class _Chip extends StatelessWidget {
   }
 }
 
+// Widget reutilizável para cada item da seção "Incluído na estadia"
 class _ItemInclusoDetalhe extends StatelessWidget {
   final IconData icon;
   final String titulo;
-  final String subtitulo;
+  final String subtitulo; // informação complementar (ex: horário, descrição)
 
   const _ItemInclusoDetalhe({
     required this.icon,
@@ -396,6 +412,7 @@ class _ItemInclusoDetalhe extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Ícone com fundo azul claro
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(

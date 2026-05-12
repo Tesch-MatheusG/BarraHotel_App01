@@ -1,4 +1,4 @@
-package com.example.atividadep1
+package com.grupo07.atividadep1
 
 import io.flutter.embedding.android.FlutterActivity
 

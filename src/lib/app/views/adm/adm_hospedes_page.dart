@@ -3,6 +3,7 @@ import '../../data/usuario_mock_store.dart';
 import '../../models/usuario_model.dart';
 import '../cores.dart';
 
+// Página de listagem de hóspedes para o painel administrativo
 class AdmHospedesPage extends StatefulWidget {
   const AdmHospedesPage({super.key});
 
@@ -11,23 +12,24 @@ class AdmHospedesPage extends StatefulWidget {
 }
 
 class _AdmHospedesPageState extends State<AdmHospedesPage> {
-  final TextEditingController _buscaController = TextEditingController();
-  String _busca = '';
+  final TextEditingController _buscaController = TextEditingController(); // controlador do campo de busca
+  String _busca = ''; // texto digitado na busca
 
   @override
   void dispose() {
-    _buscaController.dispose();
+    _buscaController.dispose(); // libera o controller ao sair da página
     super.dispose();
   }
 
+  // Retorna apenas clientes filtrados por nome, e-mail ou CPF
   List<UsuarioModel> get _hospedadesFiltrados {
     final clientes = UsuarioMockStore.clientes;
-    if (_busca.isEmpty) return clientes;
+    if (_busca.isEmpty) return clientes; // sem filtro, retorna todos os clientes
     return clientes
         .where((u) =>
             u.nome.toLowerCase().contains(_busca.toLowerCase()) ||
             u.email.toLowerCase().contains(_busca.toLowerCase()) ||
-            u.cpf.contains(_busca))
+            u.cpf.contains(_busca)) // permite buscar pelo CPF sem formatação
         .toList();
   }
 
@@ -53,7 +55,7 @@ class _AdmHospedesPageState extends State<AdmHospedesPage> {
             color: Colors.white,
             child: TextField(
               controller: _buscaController,
-              onChanged: (v) => setState(() => _busca = v),
+              onChanged: (v) => setState(() => _busca = v), // atualiza o filtro a cada caractere digitado
               decoration: InputDecoration(
                 hintText: 'Buscar por nome, e-mail ou CPF...',
                 prefixIcon: const Icon(
@@ -74,7 +76,7 @@ class _AdmHospedesPageState extends State<AdmHospedesPage> {
             ),
           ),
 
-          // CONTADOR
+          // CONTADOR de resultados com pluralização dinâmica
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             child: Row(
@@ -90,9 +92,10 @@ class _AdmHospedesPageState extends State<AdmHospedesPage> {
             ),
           ),
 
-          // LISTA
+          // LISTA de hóspedes filtrados
           Expanded(
             child: _hospedadesFiltrados.isEmpty
+                // estado vazio — nenhum hóspede encontrado
                 ? const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -113,6 +116,7 @@ class _AdmHospedesPageState extends State<AdmHospedesPage> {
                       ],
                     ),
                   )
+                // lista com card de cada hóspede
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: _hospedadesFiltrados.length,
@@ -131,6 +135,7 @@ class _AdmHospedesPageState extends State<AdmHospedesPage> {
   }
 }
 
+// Card individual de cada hóspede na listagem
 class _CardHospede extends StatelessWidget {
   final UsuarioModel hospede;
 
@@ -154,6 +159,7 @@ class _CardHospede extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Avatar padrão para todos os hóspedes
           const CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.azulClaro,
@@ -164,6 +170,7 @@ class _CardHospede extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 14),
+          // Dados resumidos: nome, e-mail e CPF
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +192,7 @@ class _CardHospede extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
+                // CPF com ícone de identificação
                 Row(
                   children: [
                     const Icon(
@@ -205,6 +213,7 @@ class _CardHospede extends StatelessWidget {
               ],
             ),
           ),
+          // Botão para abrir o modal com todos os dados do hóspede
           IconButton(
             icon: const Icon(
               Icons.info_outline,
@@ -217,6 +226,7 @@ class _CardHospede extends StatelessWidget {
     );
   }
 
+  // Abre um bottom sheet com os dados completos do hóspede
   void _verDetalhes(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -229,6 +239,7 @@ class _CardHospede extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Indicador visual de arraste do bottom sheet
             Center(
               child: Container(
                 width: 40,
@@ -248,6 +259,7 @@ class _CardHospede extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            // Campos detalhados do hóspede
             _ItemDetalhe(Icons.person_outline, 'Nome', hospede.nome),
             _ItemDetalhe(Icons.email_outlined, 'E-mail', hospede.email),
             _ItemDetalhe(Icons.phone_outlined, 'Telefone', hospede.telefone),
@@ -262,6 +274,7 @@ class _CardHospede extends StatelessWidget {
   }
 }
 
+// Widget reutilizável para exibir um campo com ícone, label e valor no modal de detalhes
 class _ItemDetalhe extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -286,7 +299,7 @@ class _ItemDetalhe extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              valor.isEmpty ? '—' : valor,
+              valor.isEmpty ? '—' : valor, // exibe traço se o campo estiver vazio
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,

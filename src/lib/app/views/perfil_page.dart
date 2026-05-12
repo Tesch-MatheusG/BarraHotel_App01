@@ -3,11 +3,13 @@ import '../data/sessao.dart';
 import 'cores.dart';
 import 'editar_perfil_page.dart';
 
+// Página que exibe os dados do perfil do usuário logado
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Obtém o usuário atualmente logado na sessão
     final usuario = Sessao.usuarioLogado;
 
     return Scaffold(
@@ -25,19 +27,21 @@ class PerfilPage extends StatelessWidget {
         child: Column(
           children: [
 
-            // CABEÇALHO COM AVATAR
+            // Cabeçalho azul com avatar e nome do usuário
             Container(
               width: double.infinity,
               color: AppColors.azulEscuro,
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
               child: Column(
                 children: [
+                  // Avatar circular com ícone de pessoa
                   const CircleAvatar(
                     radius: 42,
                     backgroundColor: Colors.white24,
                     child: Icon(Icons.person, color: Colors.white, size: 48),
                   ),
                   const SizedBox(height: 12),
+                  // Nome do usuário, exibe string vazia se nulo
                   Text(
                     usuario?.nome ?? '',
                     style: const TextStyle(
@@ -47,6 +51,7 @@ class PerfilPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
+                  // E-mail do usuário em cor branca com opacidade reduzida
                   Text(
                     usuario?.email ?? '',
                     style: const TextStyle(
@@ -60,12 +65,13 @@ class PerfilPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // DADOS DO USUÁRIO
+            // Seção com os dados pessoais do usuário
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Título da seção de informações pessoais
                   const Text(
                     'Informações Pessoais',
                     style: TextStyle(
@@ -75,6 +81,7 @@ class PerfilPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  // Card com todos os campos de informação do usuário
                   _InfoCard(
                     children: [
                       _InfoItem(
@@ -82,6 +89,7 @@ class PerfilPage extends StatelessWidget {
                         label: 'Nome',
                         valor: usuario?.nome ?? '',
                       ),
+                      // Linha divisória entre os campos
                       _Divisor(),
                       _InfoItem(
                         icon: Icons.email_outlined,
@@ -117,7 +125,7 @@ class PerfilPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  // BOTÃO EDITAR
+                  // Botão que navega para a página de edição do perfil
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -154,6 +162,7 @@ class PerfilPage extends StatelessWidget {
   }
 }
 
+// Widget privado que envolve os itens de informação em um card com borda
 class _InfoCard extends StatelessWidget {
   final List<Widget> children;
   const _InfoCard({required this.children});
@@ -164,6 +173,7 @@ class _InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        // Borda cinza suave ao redor do card
         border: Border.all(color: AppColors.cinzaBorda),
       ),
       child: Column(children: children),
@@ -171,6 +181,7 @@ class _InfoCard extends StatelessWidget {
   }
 }
 
+// Widget privado que exibe um campo de informação com ícone, rótulo e valor
 class _InfoItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -188,11 +199,13 @@ class _InfoItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         children: [
+          // Ícone do campo na cor azul escuro
           Icon(icon, size: 20, color: AppColors.azulEscuro),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Rótulo do campo em cinza e tamanho reduzido
               Text(
                 label,
                 style: const TextStyle(
@@ -201,6 +214,7 @@ class _InfoItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
+              // Valor do campo; exibe "—" se estiver vazio
               Text(
                 valor.isEmpty ? '—' : valor,
                 style: const TextStyle(
@@ -216,9 +230,11 @@ class _InfoItem extends StatelessWidget {
   }
 }
 
+// Widget privado que renderiza uma linha divisória entre os itens do card
 class _Divisor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Divider com recuo à esquerda para alinhar com o texto dos itens
     return const Divider(height: 1, indent: 48, endIndent: 16);
   }
 }

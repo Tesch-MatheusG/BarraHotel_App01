@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../data/hotel_knowledge.dart';
 
 class ChatService {
-  // Pegue sua chave em: https://aistudio.google.com/app/apikey
+//Chave API aqui
   static const _apiKey = 'AIzaSyC44DpMDTQLDgDtYsUVuvERI196xwH1E6k';
   static const _url =
       'https://generativelanguage.googleapis.com/v1beta/models/'

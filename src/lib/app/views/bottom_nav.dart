@@ -3,8 +3,9 @@ import 'quarto/quartos_page.dart';
 import 'cores.dart';
 import 'chatbot_page.dart';
 
+// Barra de navegação inferior compartilhada entre as páginas principais
 class BottomNav extends StatelessWidget {
-  final int currentIndex;
+  final int currentIndex; // índice da aba atualmente ativa
 
   const BottomNav({super.key, required this.currentIndex});
 
@@ -17,6 +18,7 @@ class BottomNav extends StatelessWidget {
       backgroundColor: Colors.white,
       elevation: 8,
       onTap: (index) {
+        // Só navega se a aba tocada for diferente da atual (evita reconstrução desnecessária)
         if (index == 0 && currentIndex != 0) {
           Navigator.pushReplacementNamed(context, '/home');
         }
@@ -32,12 +34,11 @@ class BottomNav extends StatelessWidget {
             MaterialPageRoute(builder: (_) => const ChatbotPage()),
           );
         }
-        
       },
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
+          activeIcon: Icon(Icons.home), // ícone preenchido quando ativo
           label: 'Início',
         ),
         BottomNavigationBarItem(

@@ -5,7 +5,7 @@ import '../viewmodels/login_viewmodel.dart';
 import '../models/usuario_model.dart';
 
 
-// PAGINA DE LOGIN DO APP
+// Página de login do app
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -15,17 +15,60 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-//CHAVES E CONTROLADORES
+  // Chave global para controle e validação do formulário
   final _formKey = GlobalKey<FormState>();
 
+  // Controlador do campo de email
   final emailController = TextEditingController();
+  // Controlador do campo de senha
   final senhaController = TextEditingController();
 
+  // Instância do ViewModel responsável pela lógica de login
   final vm = LoginViewModel();
+
+  // Controla o estado de carregamento enquanto aguarda o Firebase
+  bool _carregando = false;
+
+  // Método assíncrono separado para realizar o login
+  Future<void> _fazerLogin() async {
+    // Valida o formulário antes de tentar o login
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _carregando = true);
+
+    // Chama o ViewModel com email e senha digitados
+    final user = await vm.login(
+      emailController.text,
+      senhaController.text,
+    );
+
+    setState(() => _carregando = false);
+
+    if (!mounted) return;
+
+    if (user != null) {
+      // Inicia a sessão com o usuário autenticado
+      Sessao.iniciar(user);
+      // Redireciona para área admin se for master ou adm
+      if (user.perfil == PerfilUsuario.master ||
+          user.perfil == PerfilUsuario.adm) {
+        Navigator.pushReplacementNamed(context, '/adm');
+      } else {
+        // Redireciona para home se for hóspede comum
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } else {
+      // Exibe mensagem de erro se as credenciais forem inválidas
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login inválido. Verifique e-mail e senha.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Fundo azul escuro na área fora do card
       backgroundColor: AppColors.azulEscuro,
 
       body: Center(
@@ -34,17 +77,19 @@ class _LoginPageState extends State<LoginPage> {
             margin: EdgeInsets.all(20),
             padding: EdgeInsets.all(20),
 
+            // Card branco com bordas arredondadas que envolve o formulário
             decoration: BoxDecoration(
               color: AppColors.brancoCard,
               borderRadius: BorderRadius.circular(20),
             ),
 
             child: Form(
+              // Associa o formulário à chave de validação
               key: _formKey,
               child: Column(
                 children: [
 
-                  // LOGO
+                  // Logo do hotel
                   Image.asset(
                     'assets/images/sol.png',
                     width: 50
@@ -52,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 10),
 
+                  // Nome do hotel em letras maiúsculas com espaçamento
                   Text(
                     'BARRA HOTEL',
                     style: TextStyle(
@@ -63,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 20),
 
+                  // Rótulo "Login" alinhado à esquerda
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -73,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 10),
 
-                  // EMAIL
+                  // Campo de e-mail com validação de campo vazio
                   TextFormField(
                     controller: emailController,
                     decoration: _inputDecoration('Email:'),
@@ -83,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 15),
 
-                  // SENHA
+                  // Campo de senha oculta com validação de campo vazio
                   TextFormField(
                     controller: senhaController,
                     obscureText: true,
@@ -94,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 20),
 
-                  // BOTÃO
+                  // Botão de login — exibe indicador de carregamento enquanto aguarda o Firebase
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.azulBotao,
@@ -104,33 +151,23 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final user = vm.login(
-                          emailController.text,
-                          senhaController.text,
-                        );
-
-                        if (user != null) {
-                          Sessao.iniciar(user);
-                          if (user.perfil == PerfilUsuario.master ||
-                              user.perfil == PerfilUsuario.adm) {
-                                Navigator.pushReplacementNamed(context, '/adm');
-                              } else {
-                                Navigator.pushReplacementNamed(context, '/home');
-                                }
-                              } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Login inválido')),
-                          );
-                        }
-                      }
-                    },
-                    child: Text('Entrar'),
+                    // Desabilita o botão enquanto carrega
+                    onPressed: _carregando ? null : _fazerLogin,
+                    child: _carregando
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text('Entrar'),
                   ),
 
                   SizedBox(height: 10),
 
+                  // Link de recuperação de senha (funcionalidade futura)
                   GestureDetector(
                     onTap: () {
                       // TODO: implementar recuperação de senha via Firebase
@@ -152,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   SizedBox(height: 5),
 
+                  // Link para a página de cadastro de novo usuário
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, '/signup');
@@ -173,14 +211,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // DECORAÇÃO PADRÃO DOS CAMPOS
+  // Retorna a decoração padrão reutilizada em todos os campos do formulário
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
       filled: true,
+      // Fundo cinza claro nos campos de texto
       fillColor: AppColors.cinzaCampo,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
+        // Remove a borda visível padrão
         borderSide: BorderSide.none,
       ),
     );

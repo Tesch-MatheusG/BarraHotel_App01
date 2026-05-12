@@ -1,0 +1,32 @@
+@startuml Login
+actor Usuário
+participant "LoginPage" as LP
+participant "LoginViewModel" as LVM
+participant "UsuarioMockStore" as UMS
+participant "Sessao" as S
+
+Usuário -> LP: Informa email e senha
+LP -> LVM: login(email, senha)
+LVM -> UMS: autenticar(email, senha)
+
+alt Credenciais válidas
+    UMS --> LVM: UsuarioModel
+    LVM --> LP: UsuarioModel
+    LP -> S: iniciar(usuario)
+
+    alt Perfil é ADM ou Master
+        LP --> Usuário: Redireciona para Painel ADM
+    else Perfil é Cliente
+        LP --> Usuário: Redireciona para Home
+    end
+
+else Credenciais inválidas
+    UMS --> LVM: null
+    LVM --> LP: null
+    LP --> Usuário: Exibe mensagem de erro
+
+    opt 5 tentativas consecutivas
+        LP --> Usuário: Conta bloqueada por 15 minutos
+    end
+end
+@enduml

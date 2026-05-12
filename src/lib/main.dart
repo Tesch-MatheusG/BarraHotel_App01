@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'app/views/splash_page.dart';
 import 'app/views/login_page.dart';
 import 'app/views/signup_page.dart';
@@ -11,8 +12,12 @@ import 'app/views/reservas/minhas_reservas_page.dart';
 import 'app/views/chatbot_page.dart';
 import 'app/views/adm/adm_home_page.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  // Garante que os bindings do Flutter estejam prontos antes de inicializar o Firebase
+  WidgetsFlutterBinding.ensureInitialized();
+  // Inicializa o Firebase antes de rodar o app
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

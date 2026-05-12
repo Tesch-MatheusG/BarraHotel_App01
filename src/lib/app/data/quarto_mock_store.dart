@@ -1,5 +1,6 @@
 import '../models/quarto_model.dart';
 
+// Lista de categorias de quartos disponíveis no hotel
 final List <CategoriaQuarto> categorias = [
   CategoriaQuarto(
     label: 'Single',

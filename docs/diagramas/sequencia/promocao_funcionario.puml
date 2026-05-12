@@ -1,0 +1,32 @@
+@startuml Promocao
+actor Master
+participant "AdmFuncionariosPage" as AF
+participant "UsuarioMockStore" as UMS
+
+Master -> AF: Acessa tela de Funcionários
+AF -> UMS: todos (exceto master)
+UMS --> AF: Lista de usuários
+AF --> Master: Exibe lista com perfil de cada um
+
+opt Busca por nome ou email
+    Master -> AF: Digita na barra de busca
+    AF --> Master: Filtra lista em tempo real
+end
+
+Master -> AF: Clica em Promover ou Rebaixar
+
+alt Promovendo Cliente a ADM
+    AF --> Master: Confirma promoção e lista permissões
+    Master -> AF: Confirma
+    AF -> UMS: promover(email, PerfilUsuario.adm)
+    UMS --> AF: perfil atualizado
+    AF --> Master: Usuário promovido a ADM com sucesso
+
+else Rebaixando ADM a Cliente
+    AF --> Master: Confirma rebaixamento
+    Master -> AF: Confirma
+    AF -> UMS: promover(email, PerfilUsuario.cliente)
+    UMS --> AF: perfil atualizado
+    AF --> Master: Usuário rebaixado para Cliente
+end
+@enduml

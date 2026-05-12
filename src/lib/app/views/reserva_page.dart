@@ -5,9 +5,10 @@ import '../views/cores.dart';
 import '../data/reserva_mock_store.dart';
 import '../models/reserva_model.dart';
 
-// PÁGINA DE RESERVA
-// Formulário de dados do hóspede + seleção de datas + resumo financeiro
+// Página de formulário para realização de uma reserva
+// Exibe dados do quarto, seleção de datas, número de hóspedes e resumo financeiro
 class ReservaPage extends StatefulWidget {
+  // Quarto selecionado pelo usuário para reserva
   final Quarto quarto;
 
   const ReservaPage({super.key, required this.quarto});
@@ -18,36 +19,41 @@ class ReservaPage extends StatefulWidget {
 
 class _ReservaPageState extends State<ReservaPage> {
 
+  // Obtém o nome do usuário logado na sessão atual
   String get _nomeUsuario => Sessao.usuarioLogado?.nome ?? '';
 
+  // Datas de check-in e check-out selecionadas pelo usuário
   DateTime? _checkIn;
   DateTime? _checkOut;
+  // Número de hóspedes, começa com 1 por padrão
   int _hospedes = 1;
 
-  // Flag para exibir a tela de sucesso
+  // Flag que controla a exibição da tela de confirmação de sucesso
   bool _confirmado = false;
 
-  // Quantidade de noites selecionadas
+  // Calcula a quantidade de noites com base nas datas selecionadas
   int get _noites {
     if (_checkIn == null || _checkOut == null) return 0;
     return _checkOut!.difference(_checkIn!).inDays;
   }
 
-  // Valor total da hospedagem
+  // Calcula o valor total multiplicando noites pelo preço do quarto
   double get _total => _noites * widget.quarto.preco;
 
-  // Abre o DatePicker nativo e atualiza check-in ou check-out
+  // Abre o DatePicker nativo e atualiza check-in ou check-out conforme o parâmetro
   Future<void> _escolherData(bool ehCheckIn) async {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
+      // Define a data inicial do calendário dependendo do campo aberto
       initialDate: ehCheckIn
           ? (_checkIn ?? now)
           : (_checkOut ?? now.add(const Duration(days: 1))),
+      // Não permite selecionar datas passadas
       firstDate: now,
       lastDate: now.add(const Duration(days: 365)),
       builder: (context, child) => Theme(
-        // Aplica a cor principal do projeto no calendário
+        // Aplica a paleta de cores do projeto no calendário nativo
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(
             primary: AppColors.azulEscuro,
@@ -62,7 +68,7 @@ class _ReservaPageState extends State<ReservaPage> {
       setState(() {
         if (ehCheckIn) {
           _checkIn = picked;
-          // Garante que checkout não seja anterior ao checkin
+          // Ajusta o check-out automaticamente se for anterior ao novo check-in
           if (_checkOut != null && _checkOut!.isBefore(picked)) {
             _checkOut = picked.add(const Duration(days: 1));
           }
@@ -73,12 +79,10 @@ class _ReservaPageState extends State<ReservaPage> {
     }
   }
 
-  // Valida e confirma a reserva
+  // Valida os campos obrigatórios, cria a reserva e salva no mock store
   void _confirmar() {
-    if (
-      _checkIn == null ||
-      _checkOut == null
-    ) {
+    // Exibe erro se alguma das datas não foi preenchida
+    if (_checkIn == null || _checkOut == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Preencha todos os campos obrigatórios.'),
@@ -87,7 +91,9 @@ class _ReservaPageState extends State<ReservaPage> {
       );
       return;
     }
+    // Cria o objeto de reserva com os dados preenchidos
     final reserva = ReservaModel(
+      // Usa timestamp como ID único da reserva
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       nomeQuarto: widget.quarto.nome,
       tipoCama: widget.quarto.tipoCama,
@@ -98,11 +104,13 @@ class _ReservaPageState extends State<ReservaPage> {
       total: _total,
     );
 
+    // Persiste a reserva no mock store em memória
     ReservaMockStore.adicionar(reserva);
+    // Atualiza o estado para exibir a tela de sucesso
     setState(() => _confirmado = true);
   }
 
-  // Formata data para exibição (dd/mm/yyyy)
+  // Formata um objeto DateTime para o padrão brasileiro dd/mm/yyyy
   String _formatarData(DateTime? d) {
     if (d == null) return 'Selecionar';
     return '${d.day.toString().padLeft(2, '0')}/'
@@ -117,7 +125,7 @@ class _ReservaPageState extends State<ReservaPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Após confirmação exibe a tela de sucesso
+    // Se a reserva foi confirmada, exibe a tela de sucesso em vez do formulário
     if (_confirmado) {
       return _TelaSucesso(
         quarto: widget.quarto,
@@ -143,7 +151,7 @@ class _ReservaPageState extends State<ReservaPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Banner com resumo do quarto
+            // Banner no topo com nome, tipo de cama e preço do quarto
             _BannerQuarto(quarto: widget.quarto),
 
             Padding(
@@ -152,6 +160,7 @@ class _ReservaPageState extends State<ReservaPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _TituloSecao('Datas da Estadia'),
+                  // Linha com os dois seletores de data lado a lado
                   Row(
                     children: [
                       Expanded(
@@ -174,7 +183,7 @@ class _ReservaPageState extends State<ReservaPage> {
                     ],
                   ),
 
-                  // Exibe número de noites quando as datas estão preenchidas
+                  // Exibe o total de noites selecionadas somente quando > 0
                   if (_noites > 0) ...[
                     const SizedBox(height: 10),
                     Container(
@@ -195,6 +204,7 @@ class _ReservaPageState extends State<ReservaPage> {
                             color: AppColors.azulEscuro,
                           ),
                           const SizedBox(width: 6),
+                          // Texto com plural condicional para "noite/noites"
                           Text(
                             '$_noites noite${_noites > 1 ? 's' : ''} '
                             'selecionada${_noites > 1 ? 's' : ''}',
@@ -212,11 +222,14 @@ class _ReservaPageState extends State<ReservaPage> {
                   const SizedBox(height: 20),
 
                   _TituloSecao('Número de Hóspedes'),
+                  // Contador de hóspedes limitado pela capacidade do quarto
                   _ContadorHospedes(
                     valor: _hospedes,
                     maximo: widget.quarto.numeroPessoas,
+                    // Desabilita o botão de decrementar se já está no mínimo (1)
                     onDecrementar:
                         _hospedes > 1 ? () => setState(() => _hospedes--) : null,
+                    // Desabilita o botão de incrementar se atingiu a capacidade máxima
                     onIncrementar: _hospedes < widget.quarto.numeroPessoas
                         ? () => setState(() => _hospedes++)
                         : null,
@@ -225,17 +238,18 @@ class _ReservaPageState extends State<ReservaPage> {
                   const SizedBox(height: 20),
 
                   _TituloSecao('Hóspede Principal'),
+                  // Card exibindo o nome do usuário logado como hóspede principal
                   Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Color(0xFFDDDDDD)),
-                      ),
+                    ),
                     child: Row(
                       children: [
                         const Icon(Icons.person, color: AppColors.azulEscuro, size: 24),
-                        const SizedBox(width: 12,),
+                        const SizedBox(width: 12),
                         Text(
                           _nomeUsuario,
                           style: const TextStyle(
@@ -244,12 +258,12 @@ class _ReservaPageState extends State<ReservaPage> {
                           ),
                         )
                       ],
-                    ),  
                     ),
-                  
+                  ),
 
                   const SizedBox(height: 24),
 
+                  // Exibe o resumo financeiro apenas quando há noites selecionadas
                   if (_noites > 0)
                     _ResumoFinanceiro(
                       preco: widget.quarto.preco,
@@ -259,6 +273,7 @@ class _ReservaPageState extends State<ReservaPage> {
 
                   const SizedBox(height: 24),
 
+                  // Botão principal que aciona a confirmação da reserva
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -284,6 +299,7 @@ class _ReservaPageState extends State<ReservaPage> {
 
                   const SizedBox(height: 12),
 
+                  // Aviso sobre termos de uso centralizado abaixo do botão
                   Center(
                     child: Text(
                       'Ao confirmar, você concorda com os termos de '
@@ -307,7 +323,7 @@ class _ReservaPageState extends State<ReservaPage> {
   }
 }
 
-
+// Banner exibido no topo da página com as informações resumidas do quarto
 class _BannerQuarto extends StatelessWidget {
   final Quarto quarto;
 
@@ -322,11 +338,13 @@ class _BannerQuarto extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
+          // Fundo semi-transparente sobre o azul escuro
           color: Colors.white.withOpacity(0.15),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
+            // Ícone de cama dentro de um container arredondado
             Container(
               width: 60,
               height: 60,
@@ -341,6 +359,7 @@ class _BannerQuarto extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Nome do quarto em negrito
                   Text(
                     quarto.nome,
                     style: const TextStyle(
@@ -350,6 +369,7 @@ class _BannerQuarto extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 3),
+                  // Tipo de cama em cor levemente transparente
                   Text(
                     quarto.tipoCama,
                     style: TextStyle(
@@ -358,6 +378,7 @@ class _BannerQuarto extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 3),
+                  // Preço por noite formatado
                   Text(
                     'R\$ ${quarto.preco.toStringAsFixed(0)}/noite',
                     style: const TextStyle(
@@ -376,6 +397,7 @@ class _BannerQuarto extends StatelessWidget {
   }
 }
 
+// Widget de botão para seleção de data (check-in ou check-out)
 class _SeletorData extends StatelessWidget {
   final String label;
   final String valor;
@@ -403,9 +425,10 @@ class _SeletorData extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Linha com ícone e rótulo do campo
             Row(
               children: [
-                Icon(icon, size: 13, color:AppColors.azulEscuro),
+                Icon(icon, size: 13, color: AppColors.azulEscuro),
                 const SizedBox(width: 4),
                 Text(
                   label,
@@ -417,6 +440,7 @@ class _SeletorData extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
+            // Valor da data; cinza quando ainda não selecionada
             Text(
               valor,
               style: TextStyle(
@@ -434,9 +458,12 @@ class _SeletorData extends StatelessWidget {
   }
 }
 
+// Widget com botões de incremento e decremento para o número de hóspedes
 class _ContadorHospedes extends StatelessWidget {
   final int valor;
+  // Capacidade máxima do quarto
   final int maximo;
+  // Callbacks nulos desabilitam os botões nos limites mínimo e máximo
   final VoidCallback? onDecrementar;
   final VoidCallback? onIncrementar;
 
@@ -459,6 +486,7 @@ class _ContadorHospedes extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Exibe quantidade atual com plural condicional
           Row(
             children: [
               const Icon(
@@ -476,6 +504,7 @@ class _ContadorHospedes extends StatelessWidget {
               ),
             ],
           ),
+          // Botões de controle; ficam cinzas quando desabilitados
           Row(
             children: [
               IconButton(
@@ -500,6 +529,7 @@ class _ContadorHospedes extends StatelessWidget {
   }
 }
 
+// Widget com o resumo financeiro da reserva (preço × noites + total)
 class _ResumoFinanceiro extends StatelessWidget {
   final double preco;
   final int noites;
@@ -527,11 +557,13 @@ class _ResumoFinanceiro extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           const SizedBox(height: 12),
+          // Linha com cálculo: preço × número de noites
           _LinhaResumo(
             'R\$ ${preco.toStringAsFixed(0)} × $noites noite${noites > 1 ? 's' : ''}',
             'R\$ ${total.toStringAsFixed(0)}',
           ),
           const Divider(height: 20),
+          // Linha do total em negrito
           _LinhaResumo('Total', 'R\$ ${total.toStringAsFixed(0)}',
               negrito: true),
         ],
@@ -540,9 +572,11 @@ class _ResumoFinanceiro extends StatelessWidget {
   }
 }
 
+// Linha de texto com rótulo e valor usada no resumo financeiro
 class _LinhaResumo extends StatelessWidget {
   final String label;
   final String valor;
+  // Quando verdadeiro, aplica estilo em negrito e tamanho maior
   final bool negrito;
 
   const _LinhaResumo(this.label, this.valor, {this.negrito = false});
@@ -557,8 +591,8 @@ class _LinhaResumo extends StatelessWidget {
           style: TextStyle(
             fontSize: negrito ? 15 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
-            color:
-                negrito ? const Color(0xFF1A1A1A) : AppColors.cinzaTexto,
+            // Linha de total usa cor escura; demais linhas usam cinza
+            color: negrito ? const Color(0xFF1A1A1A) : AppColors.cinzaTexto,
           ),
         ),
         Text(
@@ -566,8 +600,8 @@ class _LinhaResumo extends StatelessWidget {
           style: TextStyle(
             fontSize: negrito ? 16 : 13,
             fontWeight: negrito ? FontWeight.bold : FontWeight.normal,
-            color:
-                negrito ? AppColors.azulEscuro : AppColors.cinzaTexto,
+            // Valor do total usa azul escuro para destaque
+            color: negrito ? AppColors.azulEscuro : AppColors.cinzaTexto,
           ),
         ),
       ],
@@ -575,6 +609,7 @@ class _LinhaResumo extends StatelessWidget {
   }
 }
 
+// Título de seção reutilizado ao longo do formulário
 class _TituloSecao extends StatelessWidget {
   final String texto;
 
@@ -596,7 +631,7 @@ class _TituloSecao extends StatelessWidget {
   }
 }
 
-
+// Tela exibida após a confirmação bem-sucedida da reserva
 class _TelaSucesso extends StatelessWidget {
   final Quarto quarto;
   final DateTime checkIn;
@@ -614,6 +649,7 @@ class _TelaSucesso extends StatelessWidget {
     required this.noites,
   });
 
+  // Formata DateTime para o padrão dd/mm/yyyy
   String _fmt(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}/'
       '${d.month.toString().padLeft(2, '0')}/'
@@ -630,7 +666,7 @@ class _TelaSucesso extends StatelessWidget {
             children: [
               const Spacer(),
 
-              // Ícone de sucesso
+              // Ícone circular de check indicando sucesso
               Container(
                 width: 100,
                 height: 100,
@@ -647,6 +683,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const SizedBox(height: 24),
 
+              // Título de confirmação em destaque
               const Text(
                 'Reserva Confirmada!',
                 style: TextStyle(
@@ -658,6 +695,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const SizedBox(height: 8),
 
+              // Mensagem personalizada com o nome do hóspede
               Text(
                 'Olá, $nome! Sua reserva foi registrada com sucesso.',
                 textAlign: TextAlign.center,
@@ -669,7 +707,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // Card com os detalhes
+              // Card com os detalhes completos da reserva confirmada
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -698,9 +736,11 @@ class _TelaSucesso extends StatelessWidget {
                     _DetalheItem(
                       Icons.nights_stay_outlined,
                       'Noites',
+                      // Plural condicional para "noite/noites"
                       '$noites noite${noites > 1 ? 's' : ''}',
                     ),
                     const Divider(height: 24),
+                    // Linha de total com destaque visual
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -727,7 +767,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Aviso de e-mail
+              // Aviso amarelo informando que o e-mail de confirmação será enviado
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -755,7 +795,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const Spacer(),
 
-              // Botão voltar ao início
+              // Botão principal que retorna para a tela inicial
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -782,6 +822,7 @@ class _TelaSucesso extends StatelessWidget {
 
               const SizedBox(height: 12),
 
+              // Link secundário para voltar à listagem de quartos
               TextButton(
                 onPressed: () =>
                     Navigator.popUntil(context, ModalRoute.withName('/home')),
@@ -798,7 +839,7 @@ class _TelaSucesso extends StatelessWidget {
   }
 }
 
-// Linha de detalhe com ícone, rótulo e valor
+// Widget que exibe uma linha de detalhe com ícone, rótulo e valor
 class _DetalheItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -810,12 +851,15 @@ class _DetalheItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Ícone na cor azul escuro do projeto
         Icon(icon, size: 17, color: AppColors.azulEscuro),
         const SizedBox(width: 10),
+        // Rótulo em cinza seguido de dois-pontos
         Text(
           '$label: ',
           style: const TextStyle(fontSize: 13, color: Color(0xFF777777)),
         ),
+        // Valor em negrito com reticências se ultrapassar o espaço disponível
         Expanded(
           child: Text(
             valor,

@@ -1,0 +1,30 @@
+@startuml AtividadeLogin
+start
+
+:Usuário acessa tela de login;
+:Preenche email e senha;
+
+if (Campos válidos?) then (não)
+  :Exibe erro de validação;
+  stop
+else (sim)
+  :Envia credenciais ao Firebase;
+  
+  if (Firebase autentica?) then (não)
+    if (É ADM Master no mock?) then (sim)
+      :Autentica pelo mock local;
+    else (não)
+      :Exibe mensagem de erro;
+      stop
+    endif
+  else (sim)
+    :Busca dados no Firestore;
+  endif
+
+  if (Perfil é ADM ou Master?) then (sim)
+    :Redireciona para Painel ADM;
+  else (não)
+    :Redireciona para Home;
+  endif
+end
+@enduml

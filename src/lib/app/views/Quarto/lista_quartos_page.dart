@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'detalhequarto_page.dart';
 import '../../views/cores.dart';
 
+// Página que exibe a lista de quartos de uma categoria específica
 class ListaQuartosPage extends StatelessWidget {
-  final CategoriaQuarto categoria;
+  final CategoriaQuarto categoria; // categoria recebida da tela anterior
 
   const ListaQuartosPage({super.key, required this.categoria});
 
@@ -21,6 +22,7 @@ class ListaQuartosPage extends StatelessWidget {
   }
 }
 
+// Card individual de cada quarto com carrossel, informações e botão de reserva
 class _CardQuarto extends StatelessWidget {
   final Quarto quarto;
 
@@ -29,7 +31,7 @@ class _CardQuarto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _abrirDetalhes(context),
+      onTap: () => _abrirDetalhes(context), // toque em qualquer área do card abre os detalhes
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -43,10 +45,11 @@ class _CardQuarto extends StatelessWidget {
             ),
           ],
         ),
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.antiAlias, // garante que o carrossel respeite o borderRadius
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Carrossel de imagens no topo do card
             _CarrosselImagens(quarto: quarto),
 
             Padding(
@@ -66,6 +69,7 @@ class _CardQuarto extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
+                  // Capacidade de pessoas com pluralização dinâmica
                   Row(
                     children: [
                       const Icon(
@@ -86,6 +90,7 @@ class _CardQuarto extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
+                  // Badge com o tipo de cama
                   Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: 4,
@@ -117,6 +122,7 @@ class _CardQuarto extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
+                  // Lista de comodidades em formato wrap com ícone de check
                   Wrap(
                     spacing: 12,
                     runSpacing: 4,
@@ -140,6 +146,7 @@ class _CardQuarto extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
+                  // Botão de reserva — navega para os detalhes do quarto
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -171,6 +178,7 @@ class _CardQuarto extends StatelessWidget {
     );
   }
 
+  // Navega para a página de detalhes do quarto selecionado
   void _abrirDetalhes(BuildContext context) {
     Navigator.push(
       context,
@@ -181,6 +189,7 @@ class _CardQuarto extends StatelessWidget {
   }
 }
 
+// Carrossel de imagens placeholder do quarto com indicadores e botões de navegação
 class _CarrosselImagens extends StatefulWidget {
   final Quarto quarto;
 
@@ -192,10 +201,12 @@ class _CarrosselImagens extends StatefulWidget {
 
 class _CarrosselImagensState extends State<_CarrosselImagens> {
   final PageController _pageController = PageController();
-  int _paginaAtual = 0;
+  int _paginaAtual = 0; // índice do slide visível
 
+  // Quartos quádruplos exibem 3 slides, os demais exibem 2
   int get _total => widget.quarto.numeroPessoas == 4 ? 3 : 2;
 
+  // Tons de azul acinzentado para os slides placeholder
   static const List<Color> _cores = [
     Color(0xFF90A4AE),
     Color(0xFF78909C),
@@ -204,7 +215,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _pageController.dispose(); // libera o controller ao desmontar o widget
     super.dispose();
   }
 
@@ -212,26 +223,27 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Slides do carrossel com placeholder de imagem
         SizedBox(
           height: 180,
           child: PageView.builder(
             controller: _pageController,
             itemCount: _total,
-            onPageChanged: (p) => setState(() => _paginaAtual = p),
+            onPageChanged: (p) => setState(() => _paginaAtual = p), // atualiza indicadores
             itemBuilder: (context, index) {
               return Container(
-                color: _cores[index % _cores.length],
+                color: _cores[index % _cores.length], // cicla pelas cores disponíveis
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.bed,
                       size: 60,
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withOpacity(0.5), // ícone semitransparente
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${index + 1} / $_total',
+                      '${index + 1} / $_total', // contador de slides
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.7),
                         fontSize: 12,
@@ -244,6 +256,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
           ),
         ),
 
+        // Indicadores de página na parte inferior do carrossel
         Positioned(
           bottom: 10,
           left: 0,
@@ -253,9 +266,9 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
             children: List.generate(
               _total,
               (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
+                duration: const Duration(milliseconds: 250), // animação suave
                 margin: const EdgeInsets.symmetric(horizontal: 3),
-                width: _paginaAtual == i ? 18 : 6,
+                width: _paginaAtual == i ? 18 : 6, // indicador ativo é mais largo
                 height: 6,
                 decoration: BoxDecoration(
                   color: _paginaAtual == i
@@ -268,6 +281,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
           ),
         ),
 
+        // Seta esquerda — visível apenas quando não estiver no primeiro slide
         if (_paginaAtual > 0)
           Positioned(
             left: 8,
@@ -284,6 +298,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
             ),
           ),
 
+        // Seta direita — visível apenas quando não estiver no último slide
         if (_paginaAtual < _total - 1)
           Positioned(
             right: 8,
@@ -304,6 +319,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
   }
 }
 
+// Botão circular semitransparente usado nas setas de navegação do carrossel
 class _BotaoSeta extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
@@ -317,7 +333,7 @@ class _BotaoSeta extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withOpacity(0.3), // fundo escuro semitransparente
           shape: BoxShape.circle,
         ),
         child: Icon(icon, color: Colors.white, size: 20),
