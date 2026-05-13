@@ -8,18 +8,29 @@ if (Campos válidos?) then (não)
   :Exibe erro de validação;
   stop
 else (sim)
-  :Envia credenciais ao Firebase;
-  
-  if (Firebase autentica?) then (não)
-    if (É ADM Master no mock?) then (sim)
-      :Autentica pelo mock local;
+  :Envia credenciais ao Firebase Auth;
+
+  if (Firebase autentica?) then (sim)
+    :Busca dados completos no Firestore;
+
+    if (Dados encontrados?) then (sim)
+      :Cria UsuarioModel completo;
+    else (não)
+      :Cria UsuarioModel básico;
+    endif
+
+  else (não)
+    :Tenta autenticar no mock local;
+
+    if (Encontrado no mock?) then (sim)
+      :Autentica como ADM Master;
     else (não)
       :Exibe mensagem de erro;
       stop
     endif
-  else (sim)
-    :Busca dados no Firestore;
   endif
+
+  :Inicia sessão com usuário;
 
   if (Perfil é ADM ou Master?) then (sim)
     :Redireciona para Painel ADM;
