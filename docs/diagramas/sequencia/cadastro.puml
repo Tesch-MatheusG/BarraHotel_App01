@@ -2,29 +2,27 @@
 actor Usuário
 participant "SignupPage" as SP
 participant "SignupViewModel" as SVM
-participant "MLKit" as ML
-participant "UsuarioMockStore" as UMS
+participant "Firebase Auth" as FA
+participant "Firestore" as FS
 
 Usuário -> SP: Preenche formulário de cadastro
 SP -> SP: Valida campos obrigatórios
 
 alt Campos válidos
-    SP --> Usuário: Solicita foto com documento
+    SP -> SVM: cadastrar(dados)
+    SVM -> FA: createUserWithEmailAndPassword()
 
-    Usuário -> SP: Captura imagem
-    SP -> ML: analisarImagem(imagem)
-
-    alt Rosto e documento detectados
-        ML --> SP: Verificação aprovada
-        SP -> SVM: cadastrar(dados)
-        SVM -> UMS: adicionarUsuario(usuario)
-        UMS --> SVM: OK
-        SVM --> SP: OK
+    alt Cadastro bem-sucedido
+        FA --> SVM: UserCredential
+        SVM -> FS: salvar dados extras\n(nome, cpf, telefone, cep, endereco)
+        FS --> SVM: OK
+        SVM --> SP: true
         SP --> Usuário: Cadastro concluído
         SP --> Usuário: Redireciona para Login
-    else Imagem inválida
-        ML --> SP: Verificação reprovada
-        SP --> Usuário: Solicita nova foto
+    else Email já cadastrado ou senha fraca
+        FA --> SVM: Exception
+        SVM --> SP: false
+        SP --> Usuário: Exibe mensagem de erro
     end
 
 else Campos inválidos
