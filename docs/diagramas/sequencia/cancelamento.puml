@@ -1,0 +1,29 @@
+@startuml Cancelamento
+actor Cliente
+participant "MinhasReservasPage" as MR
+participant "DetalheReservaPage" as DR
+participant "ReservaMockStore" as RMS
+
+Cliente -> MR: Acessa Minhas Reservas
+MR -> RMS: ativas
+RMS --> MR: Lista de reservas ativas
+MR --> Cliente: Exibe lista de reservas
+
+Cliente -> MR: Clica em Ver Detalhes
+MR -> DR: Navega com ReservaModel
+
+Cliente -> DR: Clica em Cancelar Reserva
+DR -> DR: podeCancelarGratis()
+
+alt Mais de 48h de antecedência
+    DR --> Cliente: Informa cancelamento gratuito
+else Menos de 48h de antecedência
+    DR --> Cliente: Avisa sobre tarifa de cancelamento
+end
+
+Cliente -> DR: Confirma cancelamento
+DR -> RMS: cancelar(id)
+RMS --> DR: OK
+DR --> Cliente: Reserva cancelada com sucesso
+DR --> Cliente: Retorna para Minhas Reservas
+@enduml

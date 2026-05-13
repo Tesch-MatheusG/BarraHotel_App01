@@ -1,0 +1,32 @@
+@startuml Reserva
+actor Cliente
+participant "DetalheQuartoPage" as DQ
+participant "ReservaPage" as RP
+participant "ReservaMockStore" as RMS
+participant "Sessao" as S
+
+Cliente -> DQ: Seleciona quarto
+DQ --> Cliente: Exibe detalhes do quarto
+Cliente -> DQ: Clica em Reservar
+DQ -> RP: Navega com Quarto selecionado
+
+Cliente -> RP: Seleciona datas de check-in e check-out
+RP -> RP: Calcula número de noites e valor total
+
+opt Datas preenchidas
+    RP --> Cliente: Exibe resumo financeiro
+end
+
+Cliente -> RP: Confirma reserva
+
+alt Datas preenchidas
+    RP -> S: usuarioLogado
+    S --> RP: UsuarioModel
+    RP -> RMS: adicionar(reserva)
+    RMS --> RP: OK
+    RP --> Cliente: Exibe tela de confirmação
+    RP --> Cliente: Informa pagamento presencial no check-in
+else Datas não preenchidas
+    RP --> Cliente: Exibe mensagem de erro
+end
+@enduml

@@ -1,28 +1,45 @@
-import '../data/usuario_mock_store.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/usuario_model.dart';
 
 class SignupViewModel {
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
 
-  void cadastrar(
-    String nome, 
-    String email, 
+  Future<bool> cadastrar(
+    String nome,
+    String email,
     String senha,
     String cpf,
     String telefone,
     String cep,
     String endereco,
-    ) {
+  ) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: senha,
+      );
 
-    final usuario = UsuarioModel(
-      nome: nome,
-      email: email,
-      senha: senha,
-      cpf: cpf,
-      telefone: telefone,
-      cep: cep,
-      endereco: endereco,
-    );
+      await credential.user?.updateDisplayName(nome);
 
-    UsuarioMockStore.adicionarUsuario(usuario);
+      // Salva os dados extras no Firestore
+      await _firestore
+          .collection('usuarios')
+          .doc(credential.user!.uid)
+          .set({
+        'nome': nome,
+        'email': email,
+        'cpf': cpf,
+        'telefone': telefone,
+        'cep': cep,
+        'endereco': endereco,
+        'perfil': 'cliente',
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

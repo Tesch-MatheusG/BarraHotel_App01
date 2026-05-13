@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/splash_viewmodel.dart';
 
+// Tela de splash exibida na inicialização do app
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -9,12 +10,14 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  // Instância do ViewModel que controla o tempo de exibição da splash
   final vm = SplashViewModel();
 
   @override
   void initState() {
     super.initState();
 
+    // Inicia o temporizador e navega para a tela de login ao concluir
     vm.iniciar(() {
       Navigator.pushReplacementNamed(context, '/login');
     });
@@ -26,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
       body: Stack(
         children: [
 
-          // IMAGEM DE FUNDO
+          // Imagem de fundo ocupando toda a tela
           SizedBox.expand(
             child: Image.asset(
               'assets/images/hotel.png',
@@ -34,18 +37,18 @@ class _SplashPageState extends State<SplashPage> {
             ),
           ),
 
-          // OVERLAY
+          // Camada escura semitransparente sobre a imagem para melhorar o contraste
           Container(
             color: Colors.black.withOpacity(0.3),
           ),
 
-         // TEXTO CENTRAL
-Center(
-  child: Image.asset(
-    'assets/images/logo.png', // caminho da logo
-    width: 180, //
-  ),
-),
+          // Logo do hotel centralizada sobre o overlay
+          Center(
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 210,
+            ),
+          ),
         ],
       ),
     );

@@ -6,8 +6,7 @@ import '../bottom_nav.dart';
 import '../../views/cores.dart';
 import '../drawer_menu.dart';
 
-// PÁGINA PRINCIPAL DE QUARTOS
-// Exibe os benefícios inclusos e as abas de categoria (Single, Casal, Triplo, Quádruplo)
+// Página principal de quartos — exibe benefícios inclusos e abas por categoria
 class QuartosPage extends StatefulWidget {
   const QuartosPage({super.key});
 
@@ -17,18 +16,17 @@ class QuartosPage extends StatefulWidget {
 
 class _QuartosPageState extends State<QuartosPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late TabController _tabController; // controla a navegação entre as categorias
 
   @override
   void initState() {
     super.initState();
-    // Uma aba por categoria de quarto
-    _tabController = TabController(length: categorias.length, vsync: this);
+    _tabController = TabController(length: categorias.length, vsync: this); // uma aba por categoria
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController.dispose(); // libera o controller ao sair da página
     super.dispose();
   }
 
@@ -36,7 +34,7 @@ class _QuartosPageState extends State<QuartosPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.fundoPagina,
-      drawer: const DrawerMenu(),
+      drawer: const DrawerMenu(), // menu lateral
       appBar: AppBar(
         backgroundColor: AppColors.azulEscuro,
         foregroundColor: Colors.white,
@@ -46,16 +44,18 @@ class _QuartosPageState extends State<QuartosPage>
         ),
         elevation: 0,
       ),
-      bottomNavigationBar: BottomNav(currentIndex: 1),
+      bottomNavigationBar: BottomNav(currentIndex: 1), // aba "Quartos" ativa
       body: SafeArea(
         child: NestedScrollView(
+          // Cabeçalho com o card de benefícios inclusos — rola junto com o conteúdo
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverToBoxAdapter(child: _CardIncluido()),
           ],
           body: Column(
             children: [
-              _TabsCategoria(tabController: _tabController),
+              _TabsCategoria(tabController: _tabController), // abas de categoria estilo pill
               const SizedBox(height: 4),
+              // Conteúdo de cada aba corresponde à lista de quartos da categoria
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
@@ -72,7 +72,7 @@ class _QuartosPageState extends State<QuartosPage>
   }
 }
 
-
+// Card fixo exibindo os benefícios inclusos em todos os quartos
 class _CardIncluido extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -96,6 +96,7 @@ class _CardIncluido extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
+          // Itens de benefício fixos para todos os quartos
           _ItemIncluido(
             icon: Icons.free_breakfast_outlined,
             titulo: 'Café da Manhã Completo',
@@ -119,11 +120,11 @@ class _CardIncluido extends StatelessWidget {
   }
 }
 
-// Item de benefício com ícone, título e subtítulo
+// Widget reutilizável para cada item de benefício com ícone, título e subtítulo
 class _ItemIncluido extends StatelessWidget {
   final IconData icon;
   final String titulo;
-  final String subtitulo;
+  final String subtitulo; // informação complementar (ex: horário, descrição)
 
   const _ItemIncluido({
     required this.icon,
@@ -162,7 +163,7 @@ class _ItemIncluido extends StatelessWidget {
   }
 }
 
-
+// Abas de categoria no estilo "pill" — destaca a aba ativa com fundo azul
 class _TabsCategoria extends StatelessWidget {
   final TabController tabController;
 
@@ -173,24 +174,24 @@ class _TabsCategoria extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFEEEEEE),
+        color: const Color(0xFFEEEEEE), // fundo cinza claro como trilho das abas
         borderRadius: BorderRadius.circular(30),
       ),
       child: TabBar(
         controller: tabController,
-        // Indicador no estilo "pill" preenchendo toda a aba
+        // Indicador no estilo "pill" preenchendo toda a aba ativa
         indicator: BoxDecoration(
           color: AppColors.azulEscuro,
           borderRadius: BorderRadius.circular(30),
         ),
-        indicatorSize: TabBarIndicatorSize.tab,
+        indicatorSize: TabBarIndicatorSize.tab, // indicador ocupa toda a largura da aba
         labelColor: Colors.white,
         unselectedLabelColor: Colors.black54,
         labelStyle: const TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 13,
         ),
-        dividerColor: Colors.transparent,
+        dividerColor: Colors.transparent, // remove a linha divisória padrão do TabBar
         tabs: categorias.map((c) => Tab(text: c.label)).toList(),
       ),
     );

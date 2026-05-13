@@ -1,4 +1,4 @@
-enum StatusReserva { ativa, concluida, cancelada }
+enum StatusReserva { ativa, emAndamento, concluida, cancelada }
 
 class ReservaModel {
   final String id;
@@ -9,6 +9,7 @@ class ReservaModel {
   final DateTime checkOut;
   final int hospedes;
   final double total;
+  bool pago;
   StatusReserva status;
 
   ReservaModel({
@@ -20,6 +21,7 @@ class ReservaModel {
     required this.checkOut,
     required this.hospedes,
     required this.total,
+    this.pago = false,
     this.status = StatusReserva.ativa,
   });
 

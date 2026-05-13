@@ -19,7 +19,7 @@ O sistema será dividido em dois aplicativos:
 
 ## Problema
 
-Atualmente, o processo de cadastro de hóspedes e a locação de quartos são realizados por meio de um sistema on-line com limitações estruturais, especialmente no momento do check-in.
+Atualmente, o cadastro de hóspedes e a locação de quartos  são realizados por meio de um sistema on-line com limitações estruturais, especialmente no momento do check-in.
 
 Isso gera:
 
@@ -47,21 +47,6 @@ Desenvolver um aplicativo mobile que permita:
 - Consulta e gerenciamento de dados
 - Controle de locação de quartos
 - Acesso administrativo para funcionários
-- Verificação digital de identidade do hóspede (em planejamento)
-
----
-
-## Funcionalidade em Planejamento – Inteligência Artificial
-
-Está prevista a implementação de um módulo de Inteligência Artificial para auxiliar na verificação de identidade do hóspede.
-
-A proposta é utilizar reconhecimento de imagem para:
-
-- Identificar a presença de um rosto na foto capturada
-- Detectar a presença de um documento oficial com foto
-- Auxiliar na confirmação de que o cliente presente é o mesmo que realizou a reserva
-
-A funcionalidade será estudada e validada quanto à viabilidade técnica durante o desenvolvimento do projeto.
 
 ---
 

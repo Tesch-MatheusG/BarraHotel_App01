@@ -5,16 +5,21 @@ import '../views/bottom_nav.dart';
 import 'cores.dart';
 import 'drawer_menu.dart';
 
+// Página inicial do app, exibida após o login
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Cor de fundo da página
       backgroundColor: AppColors.fundoPagina,
+      // Menu lateral (gaveta)
       drawer: const DrawerMenu(),
       appBar: AppBar(
+        // Cor de fundo da barra superior
         backgroundColor: AppColors.azulEscuro,
+        // Cor dos ícones e texto da AppBar
         foregroundColor: Colors.white,
         title: const Text(
           'Barra Hotel',
@@ -22,17 +27,22 @@ class HomePage extends StatelessWidget {
         ),
         elevation: 0,
       ),
+      // Barra de navegação inferior, com índice 0 (aba Home ativa)
       bottomNavigationBar: BottomNav(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
+          // Espaçamento interno horizontal e vertical do conteúdo
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Seção com informações gerais sobre o hotel
               _SectionSobreHotel(),
               const SizedBox(height: 28),
+              // Seção com cards de motivos para escolher o hotel
               _SectionPorQueEscolher(),
               const SizedBox(height: 28),
+              // Seção com lista de diferenciais do hotel
               _SectionDiferenciais(),
               const SizedBox(height: 20),
             ],
@@ -43,12 +53,14 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// Widget privado que exibe o texto descritivo do hotel
 class _SectionSobreHotel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Título da seção
         const Text(
           'Sobre o Hotel',
           style: TextStyle(
@@ -58,12 +70,14 @@ class _SectionSobreHotel extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
+        // Container com borda e fundo branco para o texto descritivo
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
+            // Borda cinza ao redor do container
             border: Border.all(color: AppColors.cinzaBorda),
           ),
           child: const Text(
@@ -72,6 +86,7 @@ class _SectionSobreHotel extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               color: Color(0xFF444444),
+              // Altura de linha para melhor legibilidade
               height: 1.6,
             ),
           ),
@@ -81,7 +96,9 @@ class _SectionSobreHotel extends StatelessWidget {
   }
 }
 
+// Widget privado que exibe os cards "Por que escolher o Barra Hotel"
 class _SectionPorQueEscolher extends StatelessWidget {
+  // Lista de dados para cada card da seção
   final List<_CardInfo> cards = const [
     _CardInfo(
       icon: Icons.business_center_outlined,
@@ -130,6 +147,7 @@ class _SectionPorQueEscolher extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Título da seção
         const Text(
           'Por que Escolher o Barra Hotel?',
           style: TextStyle(
@@ -139,6 +157,7 @@ class _SectionPorQueEscolher extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
+        // Itera sobre a lista de cards e renderiza cada um com espaçamento
         ...cards.map((card) => Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: _CardPorque(info: card),
@@ -148,12 +167,15 @@ class _SectionPorQueEscolher extends StatelessWidget {
   }
 }
 
+// Modelo de dados para cada card da seção "Por que escolher"
 class _CardInfo {
   final IconData icon;
   final String titulo;
   final String descricao;
-  final Color cor;      
-  final Color iconeCor; 
+  // Cor de fundo do card
+  final Color cor;
+  // Cor do ícone e do título
+  final Color iconeCor;
 
   const _CardInfo({
     required this.icon,
@@ -164,6 +186,7 @@ class _CardInfo {
   });
 }
 
+// Widget que renderiza visualmente um card individual
 class _CardPorque extends StatelessWidget {
   final _CardInfo info;
   const _CardPorque({required this.info});
@@ -174,25 +197,30 @@ class _CardPorque extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
+        // Cor de fundo vinda do modelo de dados
         color: info.cor,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Container circular com ícone da categoria
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
+              // Fundo do ícone com opacidade reduzida
               color: info.iconeCor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(info.icon, color: info.iconeCor, size: 28),
           ),
           const SizedBox(width: 14),
+          // Coluna com título e descrição do card
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Título do card com a cor do ícone
                 Text(
                   info.titulo,
                   style: TextStyle(
@@ -202,6 +230,7 @@ class _CardPorque extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
+                // Texto descritivo do card
                 Text(
                   info.descricao,
                   style: const TextStyle(
@@ -219,7 +248,9 @@ class _CardPorque extends StatelessWidget {
   }
 }
 
+// Widget privado que exibe a lista de diferenciais do hotel
 class _SectionDiferenciais extends StatelessWidget {
+  // Lista de diferenciais exibidos com ícone de check
   final List<String> itens = const [
     'Café da manhã completo incluído',
     'Estacionamento gratuito e seguro',
@@ -234,12 +265,14 @@ class _SectionDiferenciais extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        // Fundo azul médio para destacar a seção
         color: AppColors.azulMedio,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Título da seção em branco
           const Text(
             'Diferenciais',
             style: TextStyle(
@@ -249,15 +282,18 @@ class _SectionDiferenciais extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
+          // Itera sobre os itens e renderiza cada um com ícone de check
           ...itens.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Ícone de check azul claro
                   const Icon(Icons.check_circle,
                       color: Color(0xFF5DADE2), size: 18),
                   const SizedBox(width: 10),
+                  // Texto do diferencial
                   Expanded(
                     child: Text(
                       item,

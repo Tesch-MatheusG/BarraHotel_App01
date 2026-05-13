@@ -1,0 +1,27 @@
+@startuml AtividadeReserva
+start
+
+:Cliente seleciona quarto;
+:Acessa tela de reserva;
+:Seleciona datas de check-in e check-out;
+
+if (Datas preenchidas?) then (não)
+  :Exibe erro;
+  stop
+else (sim)
+  :Calcula número de noites e total;
+  :Define número de hóspedes;
+
+  if (Hóspedes > capacidade do quarto?) then (sim)
+    :Bloqueia incremento;
+  else (não)
+    :Permite incremento;
+  endif
+
+  :Exibe resumo financeiro;
+  :Cliente confirma reserva;
+  :Salva reserva no sistema;
+  :Exibe tela de confirmação;
+  :Informa pagamento presencial;
+end
+@enduml

@@ -42,17 +42,8 @@ sinalizar a reserva como pendente financeira.
 ## 5. Pagamento
 
 RN10 — O pagamento será realizado presencialmente no momento
-do check-in ou check-out.
+do check-in.
 
 RN11 — O ADM deve registrar o pagamento no sistema,
 alterando o status da reserva para PAGO após a confirmação
 do pagamento presencial.
-
-## 6. Verificação de Identidade
-
-RN12 — A verificação de identidade será solicitada
-obrigatoriamente no primeiro cadastro do cliente.
-
-RN13 — A verificação será considerada válida somente se
-a imagem capturada contiver tanto o rosto do usuário
-quanto um documento de identificação.

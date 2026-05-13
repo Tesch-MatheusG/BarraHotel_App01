@@ -1,0 +1,49 @@
+@startuml CasosDeUso
+left to right direction
+
+actor Cliente
+actor ADM
+actor Master
+
+rectangle "Barra Hotel App" {
+  usecase "Cadastrar conta" as UC1
+  usecase "Fazer login" as UC2
+  usecase "Consultar quartos" as UC3
+  usecase "Realizar reserva" as UC4
+  usecase "Cancelar reserva" as UC5
+  usecase "Ver minhas reservas" as UC6
+  usecase "Editar perfil" as UC7
+  usecase "Usar chatbot" as UC8
+
+  usecase "Confirmar check-in" as UC9
+  usecase "Confirmar check-out" as UC10
+  usecase "Registrar pagamento" as UC11
+  usecase "Gerenciar quartos" as UC12
+  usecase "Ver hóspedes" as UC13
+
+  usecase "Gerenciar funcionários" as UC14
+  usecase "Promover usuário a ADM" as UC15
+}
+
+Cliente --> UC1
+Cliente --> UC2
+Cliente --> UC3
+Cliente --> UC4
+Cliente --> UC5
+Cliente --> UC6
+Cliente --> UC7
+Cliente --> UC8
+
+ADM --> UC2
+ADM --> UC9
+ADM --> UC10
+ADM --> UC11
+ADM --> UC12
+ADM --> UC13
+
+Master --> UC14
+Master --> UC15
+Master --|> ADM
+
+UC15 .> UC14 : include
+@enduml
