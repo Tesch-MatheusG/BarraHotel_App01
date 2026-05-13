@@ -19,7 +19,7 @@ O sistema será dividido em dois aplicativos:
 
 ## Problema
 
-Atualmente, o cadastro de hóspedes e a locação de quartos são realizados por meio de fichas físicas.
+Atualmente, o processo de cadastro de hóspedes e a locação de quartos são realizados por meio de um sistema on-line com limitações estruturais, especialmente no momento do check-in.
 
 Isso gera:
 
