@@ -17,9 +17,9 @@ alt Firebase autentica com sucesso
     FS --> LVM: dados do usuário
 
     alt Dados encontrados no Firestore
-        LVM --> LP: UsuarioModel completo
+        LVM --> LP: Efetua login
     else Dados não encontrados
-        LVM --> LP: UsuarioModel básico (Firebase Auth)
+        LVM --> LP: Comunica e-mail não cadastrado e solicita cadastro
     end
 
     LP -> S: iniciar(usuario)
