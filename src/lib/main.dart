@@ -12,7 +12,6 @@ import 'app/views/editar_perfil_page.dart';
 import 'app/views/reservas/minhas_reservas_page.dart';
 import 'app/views/chatbot_page.dart';
 import 'app/views/adm/adm_home_page.dart';
-import 'firebase_options.dart';
 
 void main() async {
   // Garante que os bindings do Flutter estejam prontos antes de inicializar o Firebase
