@@ -221,7 +221,7 @@ class _CardReservaAdm extends StatelessWidget {
           ),
 
           // BOTÕES DE AÇÃO — visíveis apenas para reservas com status ativo
-          if (reserva.status == StatusReserva.ativa) ...[
+          if (reserva.status == StatusReserva.ativa || reserva.status == StatusReserva.emAndamento) ...[
             const SizedBox(height: 14),
             const Divider(height: 1),
             const SizedBox(height: 12),
