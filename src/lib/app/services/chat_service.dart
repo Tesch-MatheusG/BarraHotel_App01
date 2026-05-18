@@ -4,11 +4,11 @@ import '../data/hotel_knowledge.dart';
 
 class ChatService {
 //Chave API aqui
-  static const _apiKey = 'AIzaSyC44DpMDTQLDgDtYsUVuvERI196xwH1E6k';
+  static const _apiKey = 'AIzaSyCB_9H33CeC7ybrUESQ1hCRjsQuSa2GFnE';
   static const _url =
       'https://generativelanguage.googleapis.com/v1beta/models/'
-      'gemini-2.0-flash:generateContent?key=$_apiKey';
-
+    'gemini-2.5-flash:generateContent?key=$_apiKey';
+    
   // Histórico da conversa (sem o system prompt)
   final List<Map<String, dynamic>> _historico = [];
 
