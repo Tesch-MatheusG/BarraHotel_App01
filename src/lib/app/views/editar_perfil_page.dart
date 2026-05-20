@@ -4,6 +4,9 @@ import '../data/sessao.dart';
 import '../models/usuario_model.dart';
 import 'cores.dart';
 import '../data/usuario_mock_store.dart';
+import '../views/signup_page.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // Página para o usuário editar seus dados cadastrais (exceto e-mail e CPF)
 class EditarPerfilPage extends StatefulWidget {
@@ -20,7 +23,15 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
   late final TextEditingController _nome;
   late final TextEditingController _telefone;
   late final TextEditingController _cep;
-  late final TextEditingController _endereco;
+  late final TextEditingController _rua;
+  late final TextEditingController _bairro;
+  late final TextEditingController _numero;
+  late final TextEditingController _complemento;
+  String? _estadoSelecionado;
+  String? _municipioSelecionado;
+  List<String> _municipios = [];
+  bool _carregandoMunicipios = false;
+  bool _carregandoCep = false;
 
   // Máscara de formatação para o campo de telefone
   final _telefoneMask = MaskTextInputFormatter(
@@ -39,10 +50,20 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
     super.initState();
     // Pré-preenche os campos com os dados atuais do usuário logado
     final usuario = Sessao.usuarioLogado;
-    _nome = TextEditingController(text: usuario?.nome ?? '');
-    _telefone = TextEditingController(text: usuario?.telefone ?? '');
-    _cep = TextEditingController(text: usuario?.cep ?? '');
-    _endereco = TextEditingController(text: usuario?.endereco ?? '');
+      _nome = TextEditingController(text: usuario?.nome ?? '');
+      _telefone = TextEditingController(text: usuario?.telefone ?? '');
+      _cep = TextEditingController(text: usuario?.cep ?? '');
+      _rua = TextEditingController(text: usuario?.rua ?? '');
+      _bairro = TextEditingController(text: usuario?.bairro ?? '');
+      _numero = TextEditingController(text: usuario?.numero ?? '');
+      _complemento = TextEditingController(text: usuario?.complemento ?? '');
+      _estadoSelecionado = usuario?.estado.isEmpty == true ? null : usuario?.estado;
+      _municipioSelecionado = usuario?.municipio.isEmpty == true ? null : usuario?.municipio;
+
+      // Carrega municípios do estado atual
+      if (_estadoSelecionado != null) {
+        _carregarMunicipios(_estadoSelecionado!);
+      }
   }
 
   @override
@@ -51,7 +72,10 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
     _nome.dispose();
     _telefone.dispose();
     _cep.dispose();
-    _endereco.dispose();
+    _rua.dispose();
+    _bairro.dispose();
+    _numero.dispose();
+    _complemento.dispose();
     super.dispose();
   }
 
@@ -67,8 +91,14 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
         cpf: atual.cpf,
         telefone: _telefone.text,
         cep: _cep.text,
-        endereco: _endereco.text,
+        rua: _rua.text,
+        bairro: _bairro.text,
+        numero: _numero.text,
+        complemento: _complemento.text,
+        estado: _estadoSelecionado ?? '',
+        municipio: _municipioSelecionado ?? '',
       );
+      
       Sessao.iniciar(atualizado); // atualiza a sessão com os novos dados
       UsuarioMockStore.atualizar(atualizado); // persiste a alteração no store
 
@@ -143,9 +173,20 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
                 mascara: _cepMask, // aplica máscara #####-###
               ),
               _campo(
-                controller: _endereco,
-                label: 'Endereço',
+                controller: _rua,
+                label: 'Rua / Logradouro',
                 icon: Icons.home_outlined,
+              ),
+              _campo(
+                controller: _numero,
+                label: 'Número',
+                icon: Icons.tag,
+              ),
+              _campo(
+                controller: _complemento,
+                label: 'Complemento (opcional)',
+                icon: Icons.info_outline,
+                obrigatorio: false,
               ),
 
               const SizedBox(height: 24),
@@ -183,6 +224,7 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
   // Builder de campo de formulário reutilizável com suporte a máscara e teclado customizado
   Widget _campo({
     required TextEditingController controller,
+    bool obrigatorio = true,
     required String label,
     required IconData icon,
     TextInputType tipo = TextInputType.text, // padrão: teclado de texto
@@ -215,8 +257,36 @@ class _EditarPerfilPageState extends State<EditarPerfilPage> {
             ),
           ),
         ),
-        validator: (value) => value!.isEmpty ? 'Campo obrigatório' : null, // validação simples
+        validator: (value) => obrigatorio && value!.isEmpty ? 'Campo obrigatório' : null, // validação simples
       ),
     );
   }
+  // Busca municípios pelo estado selecionado via API do IBGE
+  Future<void> _carregarMunicipios(String uf) async {
+    setState(() {
+      _carregandoMunicipios = true;
+      _municipios = [];
+      _municipioSelecionado = null;
+    });
+
+    try {
+      final response = await http.get(Uri.parse(
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$uf/municipios',
+      ));
+
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        setState(() {
+          _municipios = data.map((m) => m['nome'].toString()).toList();
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao carregar municípios.')),
+      );
+    } finally {
+      setState(() => _carregandoMunicipios = false);
+    }
+  }
+
 }

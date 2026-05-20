@@ -7,7 +7,12 @@ class UsuarioModel {
   final String cpf;
   final String telefone;
   final String cep;
-  final String endereco;
+  final String rua;
+  final String bairro;
+  final String numero;
+  final String complemento;
+  final String estado;
+  final String municipio;
   final PerfilUsuario perfil;
 
   UsuarioModel({
@@ -17,7 +22,12 @@ class UsuarioModel {
     required this.cpf,
     required this.telefone,
     required this.cep,
-    required this.endereco,
+    required this.rua,
+    required this.bairro,
+    required this.numero,
+    this.complemento = '',
+    this.estado = '',
+    this.municipio = '',
     this.perfil = PerfilUsuario.cliente,
   });
 
@@ -29,7 +39,12 @@ class UsuarioModel {
       cpf: cpf,
       telefone: telefone,
       cep: cep,
-      endereco: endereco,
+      rua: rua,
+      bairro: bairro,
+      numero: numero,
+      complemento: complemento,
+      estado: estado,
+      municipio: municipio,
       perfil: perfil ?? this.perfil,
     );
   }
