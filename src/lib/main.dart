@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 import 'app/views/splash_page.dart';
 import 'app/views/login_page.dart';
@@ -14,12 +15,11 @@ import 'app/views/chatbot_page.dart';
 import 'app/views/adm/adm_home_page.dart';
 
 void main() async {
-  // Garante que os bindings do Flutter estejam prontos antes de inicializar o Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  // Inicializa o Firebase antes de rodar o app
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
