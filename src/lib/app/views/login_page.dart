@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../views/cores.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../models/usuario_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-
+ 
 // Página de login do app
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -170,14 +171,32 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Link de recuperação de senha (funcionalidade futura)
                   GestureDetector(
-                    onTap: () {
-                      // TODO: implementar recuperação de senha via Firebase
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Em breve: recuperação de senha por e-mail.'),
-                          backgroundColor: AppColors.azulEscuro,
-                        ),
-                      );
+                    onTap: () async {
+                      final email = emailController.text.trim();
+                      if (email.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Digite seu e-mail antes de recuperar a senha.'),
+                          ),
+                        );
+                        return;
+                      }
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('E-mail de recuperação enviado!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Não foi possível enviar o e-mail. Verifique o endereço.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                     child: const Text(
                      'Esqueceu a senha?',
