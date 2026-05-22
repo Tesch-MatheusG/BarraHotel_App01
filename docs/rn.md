@@ -17,9 +17,9 @@ RN04 — Uma reserva será considerada confirmada no momento
 em que o cliente a realizar pelo app, independente do pagamento,
 que será efetuado presencialmente no check-in ou check-out.
 
-RN05 — Se a reserva for realizada por agência parceira,
-o sistema deverá aplicar automaticamente a tarifa
-comissionada cadastrada para a agência.
+RN05 — O sistema trabalhará exclusivamente com tarifa net,
+não sendo aplicadas tarifas comissionadas para agências
+ou intermediários.
 
 ## 3. Cancelamento
 

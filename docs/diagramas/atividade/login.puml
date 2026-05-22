@@ -14,9 +14,9 @@ else (sim)
     :Busca dados completos no Firestore;
 
     if (Dados encontrados?) then (sim)
-      :Cria UsuarioModel completo;
+      :Efetua o Login;
     else (não)
-      :Cria UsuarioModel básico;
+      :Comunica e-mail não cadastrado e solicita cadastro;
     endif
 
   else (não)

@@ -49,3 +49,4 @@ src/.dart_tool/
 src/.idea/
 src/.metadata
 src/**/*.iml
+.env

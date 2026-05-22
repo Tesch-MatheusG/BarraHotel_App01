@@ -156,7 +156,7 @@
 **Fluxo Principal:**
 1. O cliente acessa a tela do chatbot
 2. O cliente digita sua dúvida
-3. O sistema envia a mensagem para a API da Anthropic
+3. O sistema envia a mensagem para a API (a definir)
 4. O chatbot retorna a resposta em até 5 segundos
 5. O cliente lê a resposta e pode continuar a conversa
 

@@ -11,8 +11,13 @@ class UsuarioMockStore {
       cpf: '000.000.000-00',
       telefone: '(00) 00000-0000',
       cep: '00000-000',
-      endereco: 'Barra Hotel',
-      perfil: PerfilUsuario.master, // perfil com maiores privilégios
+      rua: 'Av. Manoel Gomes Casaca',
+      bairro: 'Vila Santana',
+      numero: '111',
+      complemento: '',
+      estado: 'SP',
+      municipio: 'Vargem Grande do Sul',
+      perfil: PerfilUsuario.master,
     ),
   ];
 
