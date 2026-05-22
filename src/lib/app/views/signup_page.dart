@@ -69,6 +69,17 @@ class _SignupPageState extends State<SignupPage> {
   bool _carregandoCep = false;
   bool _carregando = false;
 
+  void _mostrarCepNaoEncontrado() {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('CEP não encontrado.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   // Máscaras
   final _cpfMask = MaskTextInputFormatter(
     mask: '###.###.###-##',
@@ -96,6 +107,8 @@ class _SignupPageState extends State<SignupPage> {
         'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$uf/municipios',
       ));
 
+      if (!mounted) return;
+
       if (response.statusCode == 200) {
         final List data = jsonDecode(response.body);
         setState(() {
@@ -103,18 +116,25 @@ class _SignupPageState extends State<SignupPage> {
         });
       }
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao carregar municípios.')),
       );
     } finally {
-      setState(() => _carregandoMunicipios = false);
+      if (mounted) {
+        setState(() => _carregandoMunicipios = false);
+      }
     }
   }
 
   // Busca endereço pelo CEP via ViaCEP e preenche os campos automaticamente
   Future<void> _buscarCep(String cepDigitado) async {
     final cepLimpo = cepDigitado.replaceAll(RegExp(r'[^0-9]'), '');
-    if (cepLimpo.length != 8) return;
+    if (cepLimpo.length != 8) {
+      _mostrarCepNaoEncontrado();
+      return;
+    }
 
     setState(() => _carregandoCep = true);
 
@@ -122,17 +142,18 @@ class _SignupPageState extends State<SignupPage> {
       final response = await http.get(
         Uri.parse('https://viacep.com.br/ws/$cepLimpo/json/'),
       );
+      if (!mounted) return;
+
+      if (response.statusCode != 200) {
+        _mostrarCepNaoEncontrado();
+        return;
+      }
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (data['erro'] == true) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('CEP não encontrado.'),
-              backgroundColor: Colors.red,
-            ),
-          );
+        if (data is! Map<String, dynamic> || data['erro'] == true) {
+          _mostrarCepNaoEncontrado();
           return;
         }
 
@@ -141,12 +162,22 @@ class _SignupPageState extends State<SignupPage> {
         bairro.text = data['bairro'] ?? '';
 
         // Seleciona o estado automaticamente
-        final uf = data['uf'] ?? '';
+        final uf = data['uf']?.toString() ?? '';
+        if (uf.isEmpty) {
+          _mostrarCepNaoEncontrado();
+          return;
+        }
         setState(() => _estadoSelecionado = uf);
 
         // Carrega e seleciona o município automaticamente
         await _carregarMunicipios(uf);
-        final cidade = data['localidade'] ?? '';
+        if (!mounted) return;
+
+        final cidade = data['localidade']?.toString() ?? '';
+        if (cidade.isEmpty) {
+          _mostrarCepNaoEncontrado();
+          return;
+        }
         setState(() => _municipioSelecionado = cidade);
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -157,11 +188,11 @@ class _SignupPageState extends State<SignupPage> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao buscar CEP.')),
-      );
+      _mostrarCepNaoEncontrado();
     } finally {
-      setState(() => _carregandoCep = false);
+      if (mounted) {
+        setState(() => _carregandoCep = false);
+      }
     }
   }
 
