@@ -25,7 +25,6 @@ Isso gera:
 
 - Perda de tempo no atendimento
 - Dificuldade de organização das informações
-- Risco de extravio de dados
 - Dificuldade de controle das locações ativas
 - Falta de um mecanismo digital de verificação de identidade
 
