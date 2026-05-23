@@ -23,9 +23,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de solteiro',
         comodidades: ['Tv Smart', 'Ar-condicionado'],
         fotos: [
-          'assets/images/quartos/siples_ar/1.jpg'
-          'assets/images/quartos/siples_ar/2.jpg'
-          'assets/images/quartos/siples_ar/3.jpg'
+          'assets/images/quartos/simples_ar/1.jpg'
+          'assets/images/quartos/simples_ar/2.jpg'
+          'assets/images/quartos/simples_ar/3.jpg'
         ],
         preco: 220,
       ),
