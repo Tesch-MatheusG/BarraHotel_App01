@@ -1,4 +1,5 @@
 import '../models/usuario_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Armazenamento temporário de usuários em memória (mock, sem banco de dados)
 class UsuarioMockStore {
@@ -6,13 +7,18 @@ class UsuarioMockStore {
     // ADM MASTER pré-cadastrado — acesso total ao sistema
     UsuarioModel(
       nome: 'Administrador Master',
-      email: 'master@barrahotel.com',
-      senha: 'master123',
+      email: dotenv.env['MASTER_EMAIL'] ?? '',
+      senha: dotenv.env['MASTER_SENHA'] ?? '',
       cpf: '000.000.000-00',
       telefone: '(00) 00000-0000',
       cep: '00000-000',
-      endereco: 'Barra Hotel',
-      perfil: PerfilUsuario.master, // perfil com maiores privilégios
+      rua: 'Av. Manoel Gomes Casaca',
+      bairro: 'Vila Santana',
+      numero: '111',
+      complemento: '',
+      estado: 'SP',
+      municipio: 'Vargem Grande do Sul',
+      perfil: PerfilUsuario.master,
     ),
   ];
 

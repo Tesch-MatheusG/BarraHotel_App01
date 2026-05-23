@@ -35,7 +35,7 @@
 ## Épico 5 – Chatbot de Atendimento
 
 * Definição do escopo de respostas do chatbot
-* Integração com a API da Anthropic (Claude)
+* Integração com a API (a definir)
 * Tela de chat no app
 * Chatbot responde dúvidas sobre o hotel, quartos e reservas
 
