@@ -18,7 +18,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
   int _paginaAtual = 0; // índice da página atual do carrossel
 
   // Exibe 3 slides se houver mais de 3 comodidades, senão exibe 2
-  int get _total => widget.quarto.comodidades.length > 3 ? 3 : 2;
+  int get _total => widget.quarto.fotos.length;
 
   // Paleta de tons de azul acinzentado para os slides do carrossel
   static const List<Color> _cores = [
@@ -82,6 +82,7 @@ class _DetalheQuartoPageState extends State<DetalheQuartoPage> {
                 pageController: _pageController,
                 paginaAtual: _paginaAtual,
                 onPageChanged: (p) => setState(() => _paginaAtual = p), // atualiza os indicadores
+                fotos: widget.quarto.fotos,
               ),
             ),
           ),
@@ -294,6 +295,7 @@ class _CarrosselGrande extends StatelessWidget {
   final PageController pageController;
   final int paginaAtual; // índice do slide visível
   final ValueChanged<int> onPageChanged; // callback ao trocar de slide
+  final List<String> fotos;
 
   const _CarrosselGrande({
     required this.total,
@@ -301,6 +303,7 @@ class _CarrosselGrande extends StatelessWidget {
     required this.pageController,
     required this.paginaAtual,
     required this.onPageChanged,
+    required this.fotos,
   });
 
   @override
@@ -313,27 +316,27 @@ class _CarrosselGrande extends StatelessWidget {
           itemCount: total,
           onPageChanged: onPageChanged,
           itemBuilder: (_, index) {
-            return Container(
-              color: cores[index % cores.length], // cicla pelas cores disponíveis
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-                  Icon(
-                    Icons.bed,
-                    size: 80,
-                    color: Colors.white.withOpacity(0.4), // ícone placeholder semitransparente
+            return Image.asset(
+              fotos[index % fotos.length], // ← sem widget.
+              fit: BoxFit.cover,
+              width: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: cores[index % cores.length],
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 50),
+                      Icon(Icons.bed, size: 80, color: Colors.white.withOpacity(0.4)),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Foto ${index + 1} de $total',
+                        style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Foto ${index + 1} de $total',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),

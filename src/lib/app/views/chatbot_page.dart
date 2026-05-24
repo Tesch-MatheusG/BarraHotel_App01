@@ -16,21 +16,23 @@ class ChatbotPage extends StatefulWidget {
 class _ChatbotPageState extends State<ChatbotPage> {
   final TextEditingController _controller = TextEditingController(); // campo de texto do usuário
   final ScrollController _scrollController = ScrollController(); // controla o scroll da lista de mensagens
-  final List<MensagemModel> _mensagens = []; // histórico de mensagens da conversa
+  static final List<MensagemModel> _mensagens = []; // histórico de mensagens da conversa
   bool _carregando = false; // indica se aguarda resposta do bot
-  final ChatService _chatService = ChatService(); // serviço responsável pela comunicação com a IA
+  static final ChatService _chatService = ChatService(); // serviço responsável pela comunicação com a IA
 
   @override
   void initState() {
     super.initState();
-    // Mensagem de boas-vindas exibida ao abrir o chat
-    _mensagens.add(MensagemModel(
-      texto:
-          'Olá! Sou o assistente virtual do Barra Hotel. 😊\n'
-          'Posso te ajudar com informações sobre nossos quartos, '
-          'reservas e serviços. Como posso te ajudar?',
-      isBot: true,
-    ));
+    // Mensagem de boas-vindas exibida ao abrir o chat (apenas se ainda não houver mensagens)
+    if (_mensagens.isEmpty) {
+      _mensagens.add(MensagemModel(
+        texto:
+            'Olá! Sou o assistente virtual do Barra Hotel. 😊\n'
+            'Posso te ajudar com informações sobre nossos quartos, '
+            'reservas e serviços. Como posso te ajudar?',
+        isBot: true,
+      ));
+    }
   }
 
   @override
@@ -72,13 +74,16 @@ class _ChatbotPageState extends State<ChatbotPage> {
         _mensagens.add(MensagemModel(texto: resposta, isBot: true)); // adiciona resposta do bot
       });
     } catch (e) {
-      // Exibe mensagem de erro amigável em caso de falha na requisição
       setState(() {
-        _mensagens.add(MensagemModel(
-          texto: 'Desculpe, tive um problema técnico. '
-                 'Tente novamente ou ligue para nossa recepção. 😊',
-          isBot: true,
-        ));
+        String mensagemErro;
+        if (e.toString().contains('429')) {
+          mensagemErro = 'Limite de uso atingido. Tente novamente mais tarde. 😊';
+        } else if (e.toString().contains('400')) {
+          mensagemErro = 'Mensagem muito longa. Tente resumir. 😊';
+        } else {
+          mensagemErro = 'Erro: ${e.toString()}';
+        }
+        _mensagens.add(MensagemModel(texto: mensagemErro, isBot: true));
       });
     } finally {
       setState(() => _carregando = false); // encerra o estado de carregamento

@@ -3,6 +3,7 @@ class Quarto {
   final int numeroPessoas;
   final String tipoCama;
   final List<String> comodidades;
+  final List<String> fotos;
   double preco;
 
   Quarto({
@@ -10,6 +11,7 @@ class Quarto {
     required this.numeroPessoas,
     required this.tipoCama,
     required this.comodidades,
+    required this.fotos,
     required this.preco,
   });
 

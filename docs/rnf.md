@@ -35,7 +35,7 @@ de conexão com a internet, impedindo ações que dependam de rede.
 ## 4. Usabilidade
 
 RNF09 — O sistema deve ter interface intuitiva e responsiva,
-adaptada para dispositivos móveis Android.
+adaptada para dispositivos móveis Android e IOS.
 
 RNF10 — O sistema deve fornecer feedback visual ao usuário
 em todas as ações que envolvam carregamento ou processamento

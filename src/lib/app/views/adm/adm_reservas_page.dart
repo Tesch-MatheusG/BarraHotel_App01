@@ -221,13 +221,14 @@ class _CardReservaAdm extends StatelessWidget {
           ),
 
           // BOTÕES DE AÇÃO — visíveis apenas para reservas com status ativo
-          if (reserva.status == StatusReserva.ativa) ...[
+          if (reserva.status == StatusReserva.ativa || reserva.status == StatusReserva.emAndamento) ...[
             const SizedBox(height: 14),
             const Divider(height: 1),
             const SizedBox(height: 12),
             Row(
               children: [
-                // Botão de check-in
+                 // Botão Check-in — só aparece quando a reserva está ativa
+                if (reserva.status == StatusReserva.ativa) ...[
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _confirmarCheckin(context),
@@ -243,7 +244,9 @@ class _CardReservaAdm extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // Botão de check-out
+                ],
+                 // Botão Check-out — só aparece quando está em andamento
+                if (reserva.status == StatusReserva.emAndamento) ...[
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: () => _confirmarCheckout(context),
@@ -276,6 +279,7 @@ class _CardReservaAdm extends StatelessWidget {
                   ),
                 ),
               ],
+            ],
             ),
           ],
         ],

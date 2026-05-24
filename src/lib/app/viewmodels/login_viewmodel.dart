@@ -35,7 +35,12 @@ class LoginViewModel {
           cpf: data['cpf'] ?? '',
           telefone: data['telefone'] ?? '',
           cep: data['cep'] ?? '',
-          endereco: data['endereco'] ?? '',
+          rua: data['rua'] ?? '',
+          bairro: data['bairro'] ?? '',
+          numero: data['numero'] ?? '',
+          complemento: data['complemento'] ?? '',
+          estado: data['estado'] ?? '',
+          municipio: data['municipio'] ?? '',
           perfil: perfil,
         );
       }

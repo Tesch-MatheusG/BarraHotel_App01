@@ -204,7 +204,7 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
   int _paginaAtual = 0; // índice do slide visível
 
   // Quartos quádruplos exibem 3 slides, os demais exibem 2
-  int get _total => widget.quarto.numeroPessoas == 4 ? 3 : 2;
+  int get _total => widget.quarto.fotos.length;
 
   // Tons de azul acinzentado para os slides placeholder
   static const List<Color> _cores = [
@@ -231,26 +231,27 @@ class _CarrosselImagensState extends State<_CarrosselImagens> {
             itemCount: _total,
             onPageChanged: (p) => setState(() => _paginaAtual = p), // atualiza indicadores
             itemBuilder: (context, index) {
-              return Container(
-                color: _cores[index % _cores.length], // cicla pelas cores disponíveis
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.bed,
-                      size: 60,
-                      color: Colors.white.withOpacity(0.5), // ícone semitransparente
+              return Image.asset(
+                widget.quarto.fotos[index % widget.quarto.fotos.length],
+                fit: BoxFit.cover,
+                width: double.infinity,
+                errorBuilder: (context, error, stackTrace) {
+                  // fallback caso a imagem não carregue
+                  return Container(
+                    color: _cores[index % _cores.length],
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.bed, size: 60, color: Colors.white.withOpacity(0.5)),
+                        const SizedBox(height: 6),
+                        Text(
+                          '${index + 1} / $_total',
+                          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '${index + 1} / $_total', // contador de slides
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           ),
