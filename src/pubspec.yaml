@@ -69,6 +69,18 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/quartos/executivo_single/
+    - assets/images/quartos/executivo_casal/
+    - assets/images/quartos/executivo_triplo/
+    - assets/images/quartos/executivo_quadruplo/
+    - assets/images/quartos/master_single/
+    - assets/images/quartos/master_casal/
+    - assets/images/quartos/master_triplo/
+    - assets/images/quartos/simples_ventilador/
+    - assets/images/quartos/simples_ar/
+    - assets/images/quartos/standard_single/
+    - assets/images/quartos/standard_casal/
+    - assets/images/quartos/standard_triplo/
     - .env 
 
   # To add assets to your application, add an assets section, like this:
