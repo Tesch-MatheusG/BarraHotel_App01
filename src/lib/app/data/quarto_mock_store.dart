@@ -23,9 +23,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de solteiro',
         comodidades: ['Tv Smart', 'Ar-condicionado'],
         fotos: [
-          'assets/images/quartos/simples_ar/1.jpg'
-          'assets/images/quartos/simples_ar/2.jpg'
-          'assets/images/quartos/simples_ar/3.jpg'
+          'assets/images/quartos/simples_ar/1.jpg',
+          'assets/images/quartos/simples_ar/2.jpg',
+          'assets/images/quartos/simples_ar/3.jpg',
         ],
         preco: 220,
       ),
@@ -35,8 +35,8 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de casal',
         comodidades: ['Tv Smart', 'Mesa de trabalho', 'Ventilador'],
         fotos: [
-          'assets/images/quartos/standard_single/1.jpg'
-          'assets/images/quartos/standard_single/2.jpg'
+          'assets/images/quartos/standard_single/1.jpg',
+          'assets/images/quartos/standard_single/2.jpg',
         ],
         preco: 260,
       ),
@@ -46,9 +46,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de casal',
         comodidades: ['Tv Smart', 'Ar-condicionado', 'Frigobar', 'Mesa de trabalho'],
         fotos: [
-          'assets/images/quartos/executivo_single/1.jpg'
-          'assets/images/quartos/executivo_single/2.jpg'
-          'assets/images/quartos/executivo_single/3.jpg'
+          'assets/images/quartos/executivo_single/1.jpg',
+          'assets/images/quartos/executivo_single/2.jpg',
+          'assets/images/quartos/executivo_single/3.jpg',
         ],
         preco: 320,
       ),
@@ -64,9 +64,9 @@ final List <CategoriaQuarto> categorias = [
           'Mesa de trabalho',
         ],
         fotos: [
-          'assets/images/quartos/master_single/1.jpg'
-          'assets/images/quartos/master_single/2.jpg'
-          'assets/images/quartos/master_single/3.jpg'
+          'assets/images/quartos/master_single/1.jpg',
+          'assets/images/quartos/master_single/2.jpg',
+          'assets/images/quartos/master_single/3.jpg',
         ],
         preco: 420,
       ),
@@ -82,8 +82,8 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de casal',
         comodidades: ['Tv Smart', 'Ventilador'],
         fotos: [
-          'assets/images/quartos/standard_casal/1.jpg'
-          'assets/images/quartos/standard_casal/2.jpg'
+          'assets/images/quartos/standard_casal/1.jpg',
+          'assets/images/quartos/standard_casal/2.jpg',
         ],
         preco: 280,
       ),
@@ -93,9 +93,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: 'Cama box de casal',
         comodidades: ['Tv Smart', 'Ar-condicionado', 'Frigobar', 'Mesa de trabalho'],
         fotos: [
-          'assets/images/quartos/executivo_casal/1.jpg'
-          'assets/images/quartos/executivo_casal/2.jpg'
-          'assets/images/quartos/executivo_casal/3.jpg'
+          'assets/images/quartos/executivo_casal/1.jpg',
+          'assets/images/quartos/executivo_casal/2.jpg',
+          'assets/images/quartos/executivo_casal/3.jpg',
         ],
         preco: 340,
       ),
@@ -111,9 +111,9 @@ final List <CategoriaQuarto> categorias = [
           'Mesa de trabalho',
         ],
         fotos: [
-          'assets/images/quartos/master_casal/1.jpg'
-          'assets/images/quartos/master_casal/2.jpg'
-          'assets/images/quartos/master_casal/3.jpg'
+          'assets/images/quartos/master_casal/1.jpg',
+          'assets/images/quartos/master_casal/2.jpg',
+          'assets/images/quartos/master_casal/3.jpg',
         ],
         preco: 480,
       ),
@@ -129,9 +129,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: '1 cama casal + 1 solteiro',
         comodidades: ['Tv Smart', 'Ventilador'],
         fotos: [
-          'assets/images/quartos/standard_triplo/1.jpg'
-          'assets/images/quartos/standard_triplo/2.jpg'
-          'assets/images/quartos/standard_triplo/3.jpg'
+          'assets/images/quartos/standard_triplo/1.jpg',
+          'assets/images/quartos/standard_triplo/2.jpg',
+          'assets/images/quartos/standard_triplo/3.jpg',
         ],
         preco: 380,
       ),
@@ -141,9 +141,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: '1 cama casal + 1 solteiro',
         comodidades: ['Tv Smart', 'Ar-condicionado', 'Frigobar'],
         fotos: [
-          'assets/images/quartos/executivo_triplo/1.jpg'
-          'assets/images/quartos/executivo_triplo/2.jpg'
-          'assets/images/quartos/executivo_triplo/3.jpg'
+          'assets/images/quartos/executivo_triplo/1.jpg',
+          'assets/images/quartos/executivo_triplo/2.jpg',
+          'assets/images/quartos/executivo_triplo/3.jpg',
         ],
         preco: 440,
       ),
@@ -158,9 +158,9 @@ final List <CategoriaQuarto> categorias = [
           'Vista para o mar',
         ],
         fotos: [
-          'assets/images/quartos/master_triplo/1.jpg'
-          'assets/images/quartos/master_triplo/2.jpg'
-          'assets/images/quartos/master_triplo/3.jpg'
+          'assets/images/quartos/master_triplo/1.jpg',
+          'assets/images/quartos/master_triplo/2.jpg',
+          'assets/images/quartos/master_triplo/3.jpg',
         ],
         preco: 560,
       ),
@@ -176,9 +176,9 @@ final List <CategoriaQuarto> categorias = [
         tipoCama: '1 cama box de casal e 2 camas de solteiro',
         comodidades: ['Tv Smart', 'Ar-condicionado', 'Frigobar', 'Mesa de trabalho'],
         fotos: [
-          'assets/images/quartos/executivo_quadruplo/1.jpg'
-          'assets/images/quartos/executivo_quadruplo/2.jpg'
-          'assets/images/quartos/executivo_quadruplo/3.jpg'
+          'assets/images/quartos/executivo_quadruplo/1.jpg',
+          'assets/images/quartos/executivo_quadruplo/2.jpg',
+          'assets/images/quartos/executivo_quadruplo/3.jpg',
         ],
         preco: 580,
       ),
